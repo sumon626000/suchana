@@ -37,7 +37,10 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./
-          server-dir: /public_html/
+          # suchana.bd lives under domains/.../public_html — NOT account-level /public_html/
+          # Use an FTP account whose home is /home/u987493658/domains/suchana.bd/public_html
+          # then set server-dir to ./  (or /). Wrong path = Actions "success" but live site unchanged.
+          server-dir: ./
           dangerous-clean-slate: false
           timeout: 60000
           exclude: |
@@ -61,8 +64,14 @@ jobs:
             **/storage/framework/sessions/**
             **/storage/framework/views/**
             **/storage/app/private/**
+            **/storage/app/public/**
+            **/public/uploads/**
+            **/public/storage/**
             **/database/*.sqlite
             **/composer.lock
+            **/smtii-hostinger.zip
+            **/ttttttttt/**
             **/.DS_Store
             **/Thumbs.db
             **/*.md
+            **/HOSTINGER.txt
