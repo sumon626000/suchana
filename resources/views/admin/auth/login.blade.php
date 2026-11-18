@@ -48,16 +48,6 @@
     <div class="admin-login-title">অ্যাডমিন লগইন</div>
     <div class="admin-login-sub">শুধুমাত্র অ্যাডমিন অ্যাকাউন্টের জন্য</div>
 
-    @if ($errors->any())
-      <div class="alert alert-error">
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
-
     <form method="POST" action="{{ route('admin.login') }}">
       @csrf
       <div class="field">
@@ -81,5 +71,24 @@
   </div>
 </div>
 
+@include('partials.flash')
+
+<script>
+(function(){
+  function hideToast(el){ if(!el) return; el.classList.add('is-hiding'); setTimeout(function(){ el.remove(); }, 260); }
+  document.querySelectorAll('[data-flash-close]').forEach(function(btn){
+    btn.addEventListener('click', function(){ hideToast(btn.closest('.flash-toast')); });
+  });
+  document.querySelectorAll('[data-auto-dismiss]').forEach(function(el){
+    setTimeout(function(){ hideToast(el); }, 5500);
+  });
+  document.querySelectorAll('form').forEach(function(form){
+    form.addEventListener('submit', function(){
+      var btn = form.querySelector('button[type="submit"], .btn-primary');
+      if (btn) btn.classList.add('is-busy');
+    });
+  });
+})();
+</script>
 </body>
 </html>

@@ -179,25 +179,10 @@
 <div class="mnav-backdrop" id="mnavBackdrop" hidden></div>
 
 <main>
-  <div class="container">
-    @if (session('success'))
-      <div class="alert alert-success mt-2" data-auto-dismiss>{{ session('success') }}</div>
-    @endif
-    @if (session('error'))
-      <div class="alert alert-error mt-2" data-auto-dismiss>{{ session('error') }}</div>
-    @endif
-    @if ($errors->any())
-      <div class="alert alert-error mt-2">
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
-  </div>
   @yield('content')
 </main>
+
+@include('partials.flash')
 
 <footer class="footer">
   <div class="container">

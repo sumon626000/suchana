@@ -247,8 +247,31 @@
     moreMenu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMore); });
   }
 
-  // ---------- Auto-hide flash messages ----------
+  // ---------- Flash toasts ----------
+  function hideFlashToast(el) {
+    if (!el) return;
+    el.classList.add('is-hiding');
+    setTimeout(function () { el.remove(); }, 260);
+  }
+  document.querySelectorAll('[data-flash-close]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      hideFlashToast(btn.closest('.flash-toast'));
+    });
+  });
   document.querySelectorAll('[data-auto-dismiss]').forEach(function (el) {
-    setTimeout(function () { el.style.display = 'none'; }, 5000);
+    setTimeout(function () { hideFlashToast(el); }, 5500);
+  });
+
+  // ---------- Form submit feedback ----------
+  document.querySelectorAll('form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+      var btn = form.querySelector('button[type="submit"], input[type="submit"], .btn-primary');
+      if (btn) {
+        btn.classList.add('is-busy');
+        if (btn.tagName === 'BUTTON' && !btn.dataset.busyLabel) {
+          btn.dataset.busyLabel = '1';
+        }
+      }
+    });
   });
 })();
