@@ -1,0 +1,83 @@
+/* ============================================================
+   Suchana — premium animation layer (PUBLIC ONLY, body.site)
+   Admin is untouched because none of these selectors apply there.
+   ============================================================ */
+
+body.site{--ease-smooth:cubic-bezier(.22,.78,.25,1)}
+
+/* ---------- Scroll progress ---------- */
+body.site .site-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:300;background:linear-gradient(90deg,var(--green),var(--blue),var(--purple));transition:width .08s linear;pointer-events:none}
+
+/* ---------- Scroll-to-top ---------- */
+body.site .site-top{position:fixed;left:16px;bottom:18px;z-index:120;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center;font-size:18px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .25s,transform .25s}
+body.site .site-top.show{opacity:1;pointer-events:auto;transform:none}
+body.site .site-top:hover{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ---------- Reveal ---------- */
+body.site .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s var(--ease-smooth),transform .75s var(--ease-smooth);will-change:opacity,transform}
+body.site .reveal.in{opacity:1;transform:none}
+
+/* ---------- Hero blobs ---------- */
+body.site .hero .container{position:relative;z-index:1}
+body.site .hero-blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.32;pointer-events:none;z-index:0}
+body.site .blob-1{width:340px;height:340px;background:var(--green);top:-80px;right:-60px;animation:siteFloat 14s ease-in-out infinite}
+body.site .blob-2{width:280px;height:280px;background:var(--blue);bottom:-100px;left:-80px;animation:siteFloat 18s ease-in-out infinite reverse}
+body.site .blob-3{width:220px;height:220px;background:var(--purple);top:40%;left:42%;opacity:.16;animation:siteFloat 16s ease-in-out infinite}
+@keyframes siteFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-34px) scale(1.08)}}
+
+/* ---------- Animated gradient headline ---------- */
+body.site .hero-title em{
+  background-image:linear-gradient(90deg,var(--green),var(--blue),var(--purple),var(--green));
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:siteGradient 8s linear infinite;
+}
+@keyframes siteGradient{to{background-position:300% 0}}
+
+/* ---------- Marquee band ---------- */
+body.site .marquee{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}
+body.site .marquee-track{display:flex;align-items:center;gap:28px;white-space:nowrap;padding:13px 0;width:max-content;animation:siteMarquee 26s linear infinite}
+body.site .marquee:hover .marquee-track{animation-play-state:paused}
+body.site .marquee-item{font-size:14px;font-weight:600;color:var(--text)}
+body.site .marquee-dot{color:var(--green);font-size:12px}
+@keyframes siteMarquee{to{transform:translateX(-50%)}}
+
+/* ---------- Card shine on hover ---------- */
+body.site .course-card{position:relative}
+body.site .course-card::after{content:'';position:absolute;top:0;left:-140%;width:70%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-18deg);pointer-events:none;transition:left .65s var(--ease-smooth)}
+body.site .course-card:hover::after{left:150%}
+
+/* ---------- Button shimmer ---------- */
+body.site .btn-primary{position:relative;overflow:hidden}
+body.site .btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.38) 50%,transparent 68%);transform:translateX(-110%);transition:transform .6s var(--ease-smooth);pointer-events:none}
+body.site .btn-primary:hover::after{transform:translateX(110%)}
+
+/* ---------- Gallery hover ---------- */
+body.site .gallery-item{transition:transform .35s var(--ease-smooth),box-shadow .35s var(--ease-smooth)}
+body.site .gallery-item img{transition:transform .5s var(--ease-smooth)}
+body.site .gallery-item:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+body.site .gallery-item:hover img{transform:scale(1.06)}
+
+/* ---------- Notice / staff subtle lift ---------- */
+body.site .notice-card,body.site .staff-card,body.site .branch-card{transition:transform .3s var(--ease-smooth),box-shadow .3s var(--ease-smooth),border-color .3s var(--ease-smooth)}
+body.site .notice-card:hover,body.site .staff-card:hover,body.site .branch-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+
+/* ---------- Section title underline sweep ---------- */
+body.site .section-title{position:relative}
+body.site .section-title::after{content:'';position:absolute;left:0;bottom:-6px;height:3px;width:56px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue));transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease-smooth)}
+body.site .section-title.in::after,body.site .section-title:hover::after{transform:scaleX(1)}
+
+/* ---------- Marquee logo strip fade edges ---------- */
+body.site .marquee{position:relative}
+body.site .marquee::before,body.site .marquee::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+body.site .marquee::before{left:0;background:linear-gradient(90deg,var(--surface),transparent)}
+body.site .marquee::after{right:0;background:linear-gradient(270deg,var(--surface),transparent)}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  body.site .reveal{opacity:1!important;transform:none!important;transition:none!important}
+  body.site .hero-blob,body.site .marquee-track,body.site .hero-title em{animation:none!important}
+  body.site .course-card::after{display:none}
+  body.site .site-progress{display:none}
+}

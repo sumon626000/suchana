@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Force HTTPS (optional, Hostinger usually has this)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Send all requests into Laravel public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
