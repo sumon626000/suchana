@@ -5,23 +5,17 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: hostinger-ftp
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: mbstring, xml, curl, zip, gd, pdo_mysql
-          coverage: none
-          tools: composer:v2
-
-      - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -35,7 +29,7 @@ jobs:
           npm run build
 
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -45,6 +39,7 @@ jobs:
           local-dir: ./
           server-dir: /public_html/
           dangerous-clean-slate: false
+          timeout: 60000
           exclude: |
             **/.git*
             **/.git*/**
@@ -53,18 +48,21 @@ jobs:
             **/.env
             **/.env.*
             **/node_modules/**
+            **/vendor/**
             **/tests/**
             **/phpunit.xml
             **/.claude/**
+            **/.cursor/**
             **/AGENTS.md
             **/CLAUDE.md
-            **/deploy/*.zip
-            **/deploy/*.html
-            **/deploy/_stage/**
+            **/deploy/**
             **/storage/logs/**
-            **/storage/framework/cache/data/**
+            **/storage/framework/cache/**
             **/storage/framework/sessions/**
             **/storage/framework/views/**
+            **/storage/app/private/**
             **/database/*.sqlite
+            **/composer.lock
             **/.DS_Store
             **/Thumbs.db
+            **/*.md
