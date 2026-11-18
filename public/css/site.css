@@ -100,7 +100,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;z-index:9
 .mnav-backdrop{position:fixed;inset:0;background:rgba(6,12,20,.45);z-index:90;animation:mnavFade .2s ease}
 @keyframes mnavFade{from{opacity:0}to{opacity:1}}
 body.mnav-open{overflow:hidden}
-@media(min-width:1024px){.mobile-nav{display:none!important}}
+@media(min-width:1024px){
+  .mobile-nav,.mnav-backdrop,#menuToggle{display:none!important}
+  body.mnav-open{overflow:auto}
+}
 
 /* Hero */
 .hero{padding:44px 0 60px;position:relative;overflow:hidden}

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Staff;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class StaffController extends Controller
@@ -19,7 +21,7 @@ class StaffController extends Controller
 
     public function create(): View
     {
-        return view('admin.staff.form', ['person' => new Staff()]);
+        return view('admin.staff.form', ['person' => new Staff]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -67,7 +69,13 @@ class StaffController extends Controller
         ]);
 
         if ($request->hasFile('photo_file')) {
-            $data['photo'] = $request->file('photo_file')->store('staff', 'public');
+            $file = $request->file('photo_file');
+            $directory = public_path('uploads/staff');
+            File::ensureDirectoryExists($directory);
+
+            $filename = Str::uuid()->toString().'.'.$file->getClientOriginalExtension();
+            $file->move($directory, $filename);
+            $data['photo'] = 'uploads/staff/'.$filename;
         }
 
         return $data;

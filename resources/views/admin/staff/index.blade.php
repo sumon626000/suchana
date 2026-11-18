@@ -12,7 +12,7 @@
       @forelse ($staff as $person)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>@if($person->photo)<img class="thumb" src="{{ $person->photo }}" alt="">@else — @endif</td>
+          <td>@if($person->photoUrl())<img class="thumb" src="{{ $person->photoUrl() }}" alt="">@else — @endif</td>
           <td>{{ $person->name }}</td>
           <td>{{ $person->designation }}</td>
           <td>{{ $person->phone ?? '—' }}</td>

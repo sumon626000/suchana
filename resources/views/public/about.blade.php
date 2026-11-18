@@ -27,9 +27,7 @@
     <h2 class="section-title" style="font-size:28px" data-bn="কর্তৃপক্ষ ও কর্মকর্তাবৃন্দ" data-en="Authority & Officers">কর্তৃপক্ষ ও কর্মকর্তাবৃন্দ</h2>
     <div class="staff-grid mt-3">
       @foreach ($staff as $person)
-        @php
-          $staffPhoto = $person->photo ? (str_starts_with($person->photo, 'http') ? $person->photo : asset('storage/'.$person->photo)) : null;
-        @endphp
+        @php $staffPhoto = $person->photoUrl(); @endphp
         <div class="staff-card">
           <div class="staff-photo">
             @if ($staffPhoto)

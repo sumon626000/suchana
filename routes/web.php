@@ -25,6 +25,16 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
+// Hostinger-safe fallback when `php artisan storage:link` is unavailable.
+Route::get('/storage/{path}', function (string $path): BinaryFileResponse {
+    $full = storage_path('app/public/'.str_replace('..', '', $path));
+
+    abort_unless(is_file($full), 404);
+
+    return response()->file($full);
+})->where('path', '.*')->name('storage.fallback');
 
 Route::controller(PublicController::class)->group(function () {
     Route::get('/', 'home')->name('home');

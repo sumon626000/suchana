@@ -6,6 +6,12 @@
   @csrf
   @if ($person->exists) @method('PUT') @endif
 
+  @if ($person->exists && $person->photoUrl())
+    <div style="margin-bottom:12px">
+      <img src="{{ $person->photoUrl() }}" alt="" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:1px solid var(--line)">
+    </div>
+  @endif
+
   <div class="form-grid two">
     <div class="field"><label>নাম *</label><input name="name" value="{{ old('name', $person->name) }}" required></div>
     <div class="field"><label>পদবি *</label><input name="designation" value="{{ old('designation', $person->designation) }}" required></div>
