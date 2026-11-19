@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
         Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
         Route::post('/certificates/auto', [CertificateController::class, 'auto'])->name('certificates.auto');
+        Route::post('/certificates/{certificate}/pdf', [CertificateController::class, 'uploadPdf'])->name('certificates.upload-pdf');
         Route::delete('/certificates/{certificate}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
 
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

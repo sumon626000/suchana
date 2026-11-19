@@ -106,6 +106,47 @@
     </div>
   </div>
 
+  <div class="card" style="margin-bottom:14px">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:8px">হোম পেজ টেক্সট</h3>
+    <p class="muted" style="font-size:13px;margin-bottom:12px">হোমপেজের ব্র্যান্ড, হিরো ও কোর্স সেকশনের লেখা এখান থেকে বদলান। সেভ করলে সাইটে সাথে সাথে দেখাবে।</p>
+
+    <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">হেডার ব্র্যান্ড</h4>
+    <div class="form-grid two" style="margin-bottom:14px">
+      <div class="field"><label>ব্র্যান্ড টাইটেল (বাংলা)</label><input name="brand_title_bn" value="{{ old('brand_title_bn', $settings['brand_title_bn'] ?? 'সুচনা মেডিকেল এন্ড টেকনিক্যাল') }}"></div>
+      <div class="field"><label>Brand title (English)</label><input name="brand_title_en" value="{{ old('brand_title_en', $settings['brand_title_en'] ?? 'Suchana Medical & Technical') }}"></div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">হিরো সেকশন</h4>
+    <div class="form-grid two" style="margin-bottom:14px">
+      <div class="field"><label>হিরো লাইন ১ (বাংলা)</label><input name="hero_title_line1_bn" value="{{ old('hero_title_line1_bn', $settings['hero_title_line1_bn'] ?? 'দক্ষতাই শক্তি,') }}"></div>
+      <div class="field"><label>Hero line 1 (English)</label><input name="hero_title_line1_en" value="{{ old('hero_title_line1_en', $settings['hero_title_line1_en'] ?? 'Skill is Power,') }}"></div>
+      <div class="field"><label>হিরো লাইন ২ (বাংলা)</label><input name="hero_title_line2_bn" value="{{ old('hero_title_line2_bn', $settings['hero_title_line2_bn'] ?? 'প্রশিক্ষণই ভবিষ্যৎ') }}"></div>
+      <div class="field"><label>Hero line 2 (English)</label><input name="hero_title_line2_en" value="{{ old('hero_title_line2_en', $settings['hero_title_line2_en'] ?? 'Training is the Future') }}"></div>
+      <div class="field"><label>হিরো সাবটাইটেল (বাংলা)</label><textarea name="hero_subtitle_bn" rows="3">{{ old('hero_subtitle_bn', $settings['hero_subtitle_bn'] ?? '') }}</textarea></div>
+      <div class="field"><label>Hero subtitle (English)</label><textarea name="hero_subtitle_en" rows="3">{{ old('hero_subtitle_en', $settings['hero_subtitle_en'] ?? '') }}</textarea></div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">চলমান কোর্স সেকশন</h4>
+    <div class="form-grid two" style="margin-bottom:14px">
+      <div class="field"><label>কিকার (বাংলা)</label><input name="home_running_kicker_bn" value="{{ old('home_running_kicker_bn', $settings['home_running_kicker_bn'] ?? 'চলমান কোর্স') }}"></div>
+      <div class="field"><label>Kicker (English)</label><input name="home_running_kicker_en" value="{{ old('home_running_kicker_en', $settings['home_running_kicker_en'] ?? 'Running Courses') }}"></div>
+      <div class="field"><label>শিরোনাম (বাংলা)</label><input name="home_running_title_bn" value="{{ old('home_running_title_bn', $settings['home_running_title_bn'] ?? 'চলমান কোর্সসমূহ') }}"></div>
+      <div class="field"><label>Title (English)</label><input name="home_running_title_en" value="{{ old('home_running_title_en', $settings['home_running_title_en'] ?? 'Running Courses') }}"></div>
+      <div class="field"><label>লিড টেক্সট (বাংলা)</label><input name="home_running_lead_bn" value="{{ old('home_running_lead_bn', $settings['home_running_lead_bn'] ?? '') }}"></div>
+      <div class="field"><label>Lead text (English)</label><input name="home_running_lead_en" value="{{ old('home_running_lead_en', $settings['home_running_lead_en'] ?? '') }}"></div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">আমাদের কোর্স সেকশন</h4>
+    <div class="form-grid two">
+      <div class="field"><label>কিকার (বাংলা)</label><input name="home_courses_kicker_bn" value="{{ old('home_courses_kicker_bn', $settings['home_courses_kicker_bn'] ?? 'আমাদের কোর্স') }}"></div>
+      <div class="field"><label>Kicker (English)</label><input name="home_courses_kicker_en" value="{{ old('home_courses_kicker_en', $settings['home_courses_kicker_en'] ?? 'Our Courses') }}"></div>
+      <div class="field"><label>শিরোনাম (বাংলা)</label><input name="home_courses_title_bn" value="{{ old('home_courses_title_bn', $settings['home_courses_title_bn'] ?? 'আমাদের কোর্সসমূহ') }}"></div>
+      <div class="field"><label>Title (English)</label><input name="home_courses_title_en" value="{{ old('home_courses_title_en', $settings['home_courses_title_en'] ?? 'Our Courses') }}"></div>
+      <div class="field"><label>লিড টেক্সট (বাংলা)</label><input name="home_courses_lead_bn" value="{{ old('home_courses_lead_bn', $settings['home_courses_lead_bn'] ?? '') }}"></div>
+      <div class="field"><label>Lead text (English)</label><input name="home_courses_lead_en" value="{{ old('home_courses_lead_en', $settings['home_courses_lead_en'] ?? '') }}"></div>
+    </div>
+  </div>
+
   <div class="admin-actions">
     <button class="btn btn-primary" type="submit">সেটিংস সংরক্ষণ করুন</button>
   </div>

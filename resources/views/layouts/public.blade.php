@@ -39,7 +39,7 @@
         <img src="{{ $logo2Src }}" alt="SFDB" width="66" height="44">
       </span>
       <span class="brand-text">
-        <span class="brand-name" data-bn="{{ $site['name_bn'] }} মেডিকেল এন্ড টেকনিক্যাল" data-en="{{ $site['name'] }} Medical &amp; Technical">{{ $site['name_bn'] }} মেডিকেল এন্ড টেকনিক্যাল</span>
+        <span class="brand-name" data-bn="{{ $site['brand_title_bn'] }}" data-en="{{ $site['brand_title_en'] }}">{{ $site['brand_title_bn'] }}</span>
         <span class="brand-sub" data-bn="ট্রেনিং ইনস্টিটিউট (SMTTI)" data-en="Training Institute (SMTTI)">ট্রেনিং ইনস্টিটিউট (SMTTI)</span>
       </span>
     </a>

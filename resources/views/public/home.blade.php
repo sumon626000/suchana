@@ -16,10 +16,10 @@
       <div>
         <div class="hero-badge" data-bn="{{ $site['hero_badge_bn'] }}" data-en="{{ $site['hero_badge_en'] }}">{{ $site['hero_badge_bn'] }}</div>
         <h1 class="hero-title">
-          <span data-bn="দক্ষতাই শক্তি," data-en="Skill is Power,">দক্ষতাই শক্তি,</span><br>
-          <em data-bn="প্রশিক্ষণই ভবিষ্যৎ" data-en="Training is the Future">প্রশিক্ষণই ভবিষ্যৎ</em>
+          <span data-bn="{{ $site['hero_title_line1_bn'] }}" data-en="{{ $site['hero_title_line1_en'] }}">{{ $site['hero_title_line1_bn'] }}</span><br>
+          <em data-bn="{{ $site['hero_title_line2_bn'] }}" data-en="{{ $site['hero_title_line2_en'] }}">{{ $site['hero_title_line2_bn'] }}</em>
         </h1>
-        <p class="hero-subtitle" data-bn="সুচনা মেডিকেল এন্ড টেকনিক্যাল ট্রেনিং ইনস্টিটিউট (SMTTI) — সরকারি অর্থায়নে বিনামূল্যে দক্ষতা প্রশিক্ষণ ও NSDA সনদ।" data-en="Suchana Medical &amp; Technical Training Institute (SMTTI) — free government-funded skills training with NSDA certification.">সুচনা মেডিকেল এন্ড টেকনিক্যাল ট্রেনিং ইনস্টিটিউট (SMTTI) — সরকারি অর্থায়নে বিনামূল্যে দক্ষতা প্রশিক্ষণ ও NSDA সনদ।</p>
+        <p class="hero-subtitle" data-bn="{{ $site['hero_subtitle_bn'] }}" data-en="{{ $site['hero_subtitle_en'] }}">{{ $site['hero_subtitle_bn'] }}</p>
         <div class="hero-ctas">
           <a href="{{ url('/apply') }}" class="btn btn-primary btn-lg" data-bn="ভর্তি হোন" data-en="Apply Now">ভর্তি হোন</a>
           <a href="{{ route('courses.index') }}" class="btn btn-outline btn-lg" data-bn="কোর্স দেখুন" data-en="View Courses">কোর্স দেখুন</a>
@@ -56,9 +56,9 @@
 
 <section class="section">
   <div class="container">
-    <div class="kicker"><span class="kicker-num">০১</span> — <span data-bn="চলমান কোর্স" data-en="Running Courses">চলমান কোর্স</span></div>
-    <h2 class="section-title" data-bn="চলমান কোর্সসমূহ" data-en="Running Courses">চলমান কোর্সসমূহ</h2>
-    <p class="section-lead" data-bn="সরকারি অর্থায়নে বিনামূল্যে প্রশিক্ষণ — ভর্তি চলছে।" data-en="Free government-funded training — admission open.">সরকারি অর্থায়নে বিনামূল্যে প্রশিক্ষণ — ভর্তি চলছে।</p>
+    <div class="kicker"><span class="kicker-num">০১</span> — <span data-bn="{{ $site['home_running_kicker_bn'] }}" data-en="{{ $site['home_running_kicker_en'] }}">{{ $site['home_running_kicker_bn'] }}</span></div>
+    <h2 class="section-title" data-bn="{{ $site['home_running_title_bn'] }}" data-en="{{ $site['home_running_title_en'] }}">{{ $site['home_running_title_bn'] }}</h2>
+    <p class="section-lead" data-bn="{{ $site['home_running_lead_bn'] }}" data-en="{{ $site['home_running_lead_en'] }}">{{ $site['home_running_lead_bn'] }}</p>
 
     <div class="slider-wrap" data-slider data-autoplay="4500">
       <div class="slider-track">
@@ -89,9 +89,9 @@
 
 <section class="section" style="background:var(--surface)">
   <div class="container">
-    <div class="kicker"><span class="kicker-num">০২</span> — <span data-bn="আমাদের কোর্স" data-en="Our Courses">আমাদের কোর্স</span></div>
-    <h2 class="section-title" data-bn="আমাদের কোর্সসমূহ" data-en="Our Courses">আমাদের কোর্সসমূহ</h2>
-    <p class="section-lead" data-bn="প্রতিটি কোর্সের মেয়াদ, যোগ্যতা, আসন, ফি, ভাতা ও আবেদনের সময়সীমা দেখুন।" data-en="See duration, eligibility, seats, fees, stipend and application deadline for each course.">প্রতিটি কোর্সের মেয়াদ, যোগ্যতা, আসন, ফি, ভাতা ও আবেদনের সময়সীমা দেখুন।</p>
+    <div class="kicker"><span class="kicker-num">০২</span> — <span data-bn="{{ $site['home_courses_kicker_bn'] }}" data-en="{{ $site['home_courses_kicker_en'] }}">{{ $site['home_courses_kicker_bn'] }}</span></div>
+    <h2 class="section-title" data-bn="{{ $site['home_courses_title_bn'] }}" data-en="{{ $site['home_courses_title_en'] }}">{{ $site['home_courses_title_bn'] }}</h2>
+    <p class="section-lead" data-bn="{{ $site['home_courses_lead_bn'] }}" data-en="{{ $site['home_courses_lead_en'] }}">{{ $site['home_courses_lead_bn'] }}</p>
 
     <div class="courses-grid">
       @foreach ($courses as $course)

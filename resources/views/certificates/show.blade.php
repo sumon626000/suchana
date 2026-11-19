@@ -39,11 +39,17 @@
 </head>
 <body>
 <div class="actions">
-  <a class="btn" href="{{ route('certificate.pdf', $certificate->certificate_no) }}">PDF ডাউনলোড</a>
+  <a class="btn" href="{{ route('certificate.pdf', $certificate->certificate_no) }}" target="_blank">PDF ডাউনলোড</a>
   <button class="btn btn-outline" onclick="window.print()">প্রিন্ট</button>
   <a class="btn btn-outline" href="{{ route('verify.code', $certificate->certificate_no) }}">যাচাই করুন</a>
 </div>
 
+@if ($certificate->hasUploadedPdf())
+<div style="max-width:900px;margin:0 auto 16px">
+  <iframe src="{{ route('certificate.pdf', $certificate->certificate_no) }}" title="Certificate PDF" style="width:100%;min-height:80vh;border:1px solid #d7dee7;border-radius:12px;background:#fff"></iframe>
+  <p style="text-align:center;margin-top:10px;font-size:13px;color:#5a6b7d">NSDA আপলোডেড সার্টিফিকেট · Verify: <code>{{ $certificate->verification_code }}</code></p>
+</div>
+@else
 <div class="cert">
   <div class="logos">
     <img src="/images/logo-suchana.jpg" alt="Suchana">
@@ -99,5 +105,6 @@
     <img src="{{ $qr }}" alt="Verify QR" style="width:86px;height:86px;border:1px solid #e2e8f0;border-radius:8px;padding:3px;background:#fff">
   </div>
 </div>
+@endif
 </body>
 </html>

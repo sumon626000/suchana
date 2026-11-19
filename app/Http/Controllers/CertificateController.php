@@ -11,8 +11,11 @@ use Dompdf\Options;
 use Endroid\QrCode\Builder\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class CertificateController extends Controller
@@ -31,6 +34,7 @@ class CertificateController extends Controller
         $data = $request->validate([
             'user_id' => ['required', 'exists:users,id'],
             'course_id' => ['required', 'exists:courses,id'],
+            'pdf_file' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
         ]);
 
         $exists = Certificate::where('user_id', $data['user_id'])
@@ -41,9 +45,32 @@ class CertificateController extends Controller
             return back()->with('error', 'এই শিক্ষার্থীর এই কোর্সের সার্টিফিকেট আগেই তৈরি হয়েছে।');
         }
 
-        $this->createCertificate($data['user_id'], $data['course_id'], $request->user()->id);
+        $certificate = $this->createCertificate($data['user_id'], $data['course_id'], $request->user()->id);
 
-        return back()->with('success', 'সার্টিফিকেট তৈরি হয়েছে।');
+        if ($request->hasFile('pdf_file')) {
+            $certificate->update([
+                'pdf_path' => $this->storeCertificatePdf($request->file('pdf_file'), $certificate),
+            ]);
+        }
+
+        return back()->with('success', 'সার্টিফিকেট তৈরি হয়েছে।'.($request->hasFile('pdf_file') ? ' PDF আপলোড হয়েছে।' : ''));
+    }
+
+    public function uploadPdf(Request $request, Certificate $certificate): RedirectResponse
+    {
+        $request->validate([
+            'pdf_file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
+        ]);
+
+        if ($certificate->hasUploadedPdf()) {
+            File::delete($certificate->pdfPublicPath());
+        }
+
+        $certificate->update([
+            'pdf_path' => $this->storeCertificatePdf($request->file('pdf_file'), $certificate),
+        ]);
+
+        return back()->with('success', 'সার্টিফিকেট PDF আপলোড হয়েছে।');
     }
 
     public function auto(Request $request): RedirectResponse
@@ -67,6 +94,10 @@ class CertificateController extends Controller
 
     public function destroy(Certificate $certificate): RedirectResponse
     {
+        if ($certificate->hasUploadedPdf()) {
+            File::delete($certificate->pdfPublicPath());
+        }
+
         $certificate->delete();
 
         return back()->with('success', 'সার্টিফিকেট মুছে ফেলা হয়েছে।');
@@ -84,12 +115,21 @@ class CertificateController extends Controller
         return view('certificates.show', compact('certificate', 'qr'));
     }
 
-    public function pdf(string $no): Response
+    public function pdf(string $no): Response|BinaryFileResponse
     {
         $certificate = Certificate::with(['user', 'course'])
             ->where('certificate_no', $no)
             ->orWhere('verification_code', $no)
             ->firstOrFail();
+
+        if ($certificate->hasUploadedPdf()) {
+            $filename = Str::slug($certificate->user?->name ?? 'certificate').'-'.$certificate->certificate_no.'.pdf';
+
+            return response()->file($certificate->pdfPublicPath(), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            ]);
+        }
 
         $logo1 = 'data:image/jpeg;base64,'.base64_encode(file_get_contents(public_path('images/logo-suchana.jpg')));
         $logo2 = 'data:image/jpeg;base64,'.base64_encode(file_get_contents(public_path('images/logo-sfdb.jpg')));
@@ -180,6 +220,17 @@ class CertificateController extends Controller
             'issued_by' => $issuedBy,
             'status' => 'issued',
         ]);
+    }
+
+    private function storeCertificatePdf(UploadedFile $file, Certificate $certificate): string
+    {
+        $directory = public_path('uploads/certificates');
+        File::ensureDirectoryExists($directory);
+
+        $filename = $certificate->certificate_no.'-'.Str::uuid()->toString().'.pdf';
+        $file->move($directory, $filename);
+
+        return 'uploads/certificates/'.$filename;
     }
 
     private function uniqueCertificateNo(): string
