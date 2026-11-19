@@ -17,6 +17,10 @@ class AdminAuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
+        if (Auth::check() && ! Auth::user()->isAdmin()) {
+            Auth::logout();
+        }
+
         return view('admin.auth.login');
     }
 
@@ -49,7 +53,8 @@ class AdminAuthController extends Controller
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        // Always land on /admin/dashboard — bare /admin can 500 on Hostinger.
+        return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request): RedirectResponse

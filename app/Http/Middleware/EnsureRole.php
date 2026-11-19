@@ -13,13 +13,17 @@ class EnsureRole
         $user = $request->user();
 
         if (! $user) {
-            return redirect()->route('login');
+            return $request->is('admin', 'admin/*')
+                ? redirect()->route('admin.login')
+                : redirect()->route('login');
         }
 
         if (! $user->is_active) {
             auth()->logout();
 
-            return redirect()->route('login')->withErrors(['login' => 'Your account is inactive.']);
+            $loginRoute = $request->is('admin', 'admin/*') ? 'admin.login' : 'login';
+
+            return redirect()->route($loginRoute)->withErrors(['login' => 'Your account is inactive.']);
         }
 
         if (! in_array($user->role, $roles, true)) {

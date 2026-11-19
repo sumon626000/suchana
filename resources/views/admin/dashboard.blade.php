@@ -33,13 +33,13 @@
       <tr><th>আবেদন নং</th><th>নাম</th><th>কোর্স</th><th>স্ট্যাটাস</th><th>তারিখ</th></tr>
     </thead>
     <tbody>
-      @forelse ($recent as $app)
+      @forelse ($recent as $application)
         <tr>
-          <td><a href="{{ route('admin.applications.show', $app) }}">{{ $app->application_no }}</a></td>
-          <td>{{ $app->full_name }}</td>
-          <td>{{ $app->course->name_bn }}</td>
-          <td><span class="badge badge-{{ $app->status }}">{{ $app->status }}</span></td>
-          <td>{{ $app->created_at->format('d M Y') }}</td>
+          <td><a href="{{ route('admin.applications.show', $application) }}">{{ $application->application_no }}</a></td>
+          <td>{{ $application->full_name }}</td>
+          <td>{{ $application->course?->name_bn ?? '—' }}</td>
+          <td><span class="badge badge-{{ $application->status }}">{{ $application->status }}</span></td>
+          <td>{{ $application->created_at?->format('d M Y') }}</td>
         </tr>
       @empty
         <tr><td colspan="5" class="empty">এখনো কোনো আবেদন নেই।</td></tr>

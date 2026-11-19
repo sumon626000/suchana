@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\ApplicationController as AdminApplicationController;
 use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CourseController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NoticeController;
@@ -104,7 +104,9 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:student')->name('attendance.scan.store');
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        // Use /admin/dashboard — bare /admin can 500 on Hostinger/CDN edge setups.
+        Route::get('/dashboard', [AdminHomeController::class, 'index'])->name('dashboard');
+        Route::get('/', fn () => redirect()->route('admin.dashboard'));
 
         Route::resource('courses', CourseController::class)->except('show');
         Route::resource('batches', BatchController::class)->except('show');
