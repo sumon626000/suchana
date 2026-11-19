@@ -53,6 +53,8 @@ class AppServiceProvider extends ServiceProvider
                 'theme_color' => Settings::get('theme_color', 'sky'),
                 'logo_suchana' => Settings::get('logo_suchana', ''),
                 'logo_sfdb' => Settings::get('logo_sfdb', ''),
+                'hero_image' => Settings::get('hero_image', ''),
+                'hero_image_url' => Settings::mediaUrl(Settings::get('hero_image', ''), asset('images/logo-suchana.jpg')),
                 'hero_badge_bn' => Settings::get('hero_badge_bn', ''),
                 'hero_badge_en' => Settings::get('hero_badge_en', ''),
                 'about_bn' => Settings::get('about_bn', ''),

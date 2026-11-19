@@ -7,11 +7,12 @@
 </div>
 <div class="table-wrap">
   <table class="data-table">
-    <thead><tr><th>#</th><th>নাম</th><th>লেভেল</th><th>আসন</th><th>ফি</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th></tr></thead>
+    <thead><tr><th>#</th><th>ছবি</th><th>নাম</th><th>লেভেল</th><th>আসন</th><th>ফি</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th></tr></thead>
     <tbody>
       @forelse ($courses as $course)
         <tr>
           <td>{{ $loop->iteration }}</td>
+          <td><img src="{{ $course->imageUrl() }}" alt="" style="width:56px;height:40px;object-fit:cover;border-radius:8px;border:1px solid var(--line)"></td>
           <td><strong>{{ $course->name_bn }}</strong><div class="muted" style="font-size:12px">{{ $course->name_en }}</div></td>
           <td>{{ $course->level }}</td>
           <td>{{ $course->seats_available }}/{{ $course->seats_total }}</td>
@@ -26,7 +27,7 @@
           </td>
         </tr>
       @empty
-        <tr><td colspan="7" class="empty">কোনো কোর্স নেই।</td></tr>
+        <tr><td colspan="8" class="empty">কোনো কোর্স নেই।</td></tr>
       @endforelse
     </tbody>
   </table>

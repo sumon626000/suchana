@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\File;
 
 class Settings
 {
@@ -33,6 +34,32 @@ class Settings
         }
 
         return in_array($value, ['1', 'true', 'on', 'yes'], true);
+    }
+
+    public static function mediaUrl(?string $path, ?string $fallback = null): string
+    {
+        if (! $path) {
+            return $fallback ?? asset('images/logo-suchana.jpg');
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, '/')) {
+            return asset(ltrim($path, '/'));
+        }
+
+        if (str_starts_with($path, 'uploads/') || str_starts_with($path, 'images/')) {
+            return asset($path);
+        }
+
+        $uploadPath = 'uploads/'.$path;
+        if (File::exists(public_path($uploadPath))) {
+            return asset($uploadPath);
+        }
+
+        return asset('storage/'.$path);
     }
 
     public static function flush(): void

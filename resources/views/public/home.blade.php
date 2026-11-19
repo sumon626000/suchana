@@ -4,7 +4,9 @@
 
 @section('content')
 @php
-  $heroImage = $courses->first()?->imageUrl() ?? asset('images/logo-suchana.jpg');
+  $heroImage = ! empty($site['hero_image'])
+    ? $site['hero_image_url']
+    : ($courses->first()?->imageUrl() ?? asset('images/logo-suchana.jpg'));
 @endphp
 
 <section class="hero">

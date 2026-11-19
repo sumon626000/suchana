@@ -7,6 +7,9 @@ use App\Models\Setting;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class SettingsController extends Controller
@@ -59,12 +62,17 @@ class SettingsController extends Controller
             'home_courses_lead_bn' => ['nullable', 'string', 'max:300'],
             'home_courses_lead_en' => ['nullable', 'string', 'max:300'],
             'theme_color' => ['required', 'in:sky,charcoal,green,purple,red,teal,orange'],
+            'hero_image' => ['nullable', 'string', 'max:500'],
         ]);
 
         $request->validate([
             'logo_suchana_file' => ['nullable', 'image', 'max:2048'],
             'logo_sfdb_file' => ['nullable', 'image', 'max:2048'],
+            'hero_image_file' => ['nullable', 'image', 'max:5120'],
+            'remove_hero_image' => ['nullable', 'boolean'],
         ]);
+
+        unset($data['hero_image']);
 
         if ($request->hasFile('logo_suchana_file')) {
             $data['logo_suchana'] = $request->file('logo_suchana_file')->store('branding', 'public');
@@ -72,6 +80,18 @@ class SettingsController extends Controller
 
         if ($request->hasFile('logo_sfdb_file')) {
             $data['logo_sfdb'] = $request->file('logo_sfdb_file')->store('branding', 'public');
+        }
+
+        if ($request->boolean('remove_hero_image')) {
+            $this->deletePublicUpload(Settings::get('hero_image'));
+            $data['hero_image'] = '';
+        }
+
+        if ($request->hasFile('hero_image_file')) {
+            $this->deletePublicUpload(Settings::get('hero_image'));
+            $data['hero_image'] = $this->storePublicImage($request->file('hero_image_file'), 'home');
+        } elseif ($request->filled('hero_image') && ! $request->boolean('remove_hero_image')) {
+            $data['hero_image'] = $request->string('hero_image')->toString();
         }
 
         $data['live_chat_enabled'] = $request->boolean('live_chat_enabled') ? '1' : '0';
@@ -83,5 +103,27 @@ class SettingsController extends Controller
         Settings::flush();
 
         return back()->with('success', 'সেটিংস সংরক্ষণ হয়েছে।');
+    }
+
+    private function storePublicImage(UploadedFile $file, string $folder): string
+    {
+        $directory = public_path('uploads/'.$folder);
+        File::ensureDirectoryExists($directory);
+
+        $filename = Str::uuid()->toString().'.'.$file->getClientOriginalExtension();
+        $file->move($directory, $filename);
+
+        return 'uploads/'.$folder.'/'.$filename;
+    }
+
+    private function deletePublicUpload(?string $path): void
+    {
+        if (! $path || str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return;
+        }
+
+        if (str_starts_with($path, 'uploads/') && File::exists(public_path($path))) {
+            File::delete(public_path($path));
+        }
     }
 }

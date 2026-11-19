@@ -25,6 +25,7 @@ class SettingsSeeder extends Seeder
             'live_chat_enabled' => '1',
             'live_chat_script' => '',
             'theme_color' => 'sky',
+            'hero_image' => '',
             'logo_suchana' => '',
             'logo_sfdb' => '',
             'hero_badge_bn' => 'ভর্তি চলছে | সরকারি অর্থায়নে বিনামূল্যে!',

@@ -76,6 +76,33 @@
   </div>
 
   <div class="card" style="margin-bottom:14px">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">হোমপেজ হিরো ছবি</h3>
+    <p class="muted" style="font-size:13px;margin-bottom:12px">হোমপেজের উপরের বড় ছবি এখান থেকে আপলোড করে বদলান (JPG/PNG/WebP, সর্বোচ্চ ৫MB)। কোর্স কার্ডের ছবি আলাদা — <strong>কোর্স → এডিট</strong> থেকে বদলাবেন।</p>
+
+    @if (! empty($settings['hero_image']))
+      <div style="margin-bottom:12px">
+        <img src="{{ \App\Support\Settings::mediaUrl($settings['hero_image']) }}" alt="" style="max-width:360px;max-height:200px;width:100%;object-fit:cover;border-radius:12px;border:1px solid var(--line)">
+        <div class="field" style="display:flex;align-items:center;gap:8px;margin-top:8px">
+          <input type="checkbox" name="remove_hero_image" value="1" id="removeHeroImage" style="width:18px;height:18px">
+          <label for="removeHeroImage" style="margin:0">বর্তমান হিরো ছবি মুছুন</label>
+        </div>
+      </div>
+    @endif
+
+    <div class="form-grid two">
+      <div class="field">
+        <label>হিরো ছবি আপলোড</label>
+        <input type="file" name="hero_image_file" accept="image/*" data-upload-preview="#heroImagePreview">
+        <div class="upload-preview" id="heroImagePreview" hidden></div>
+      </div>
+      <div class="field">
+        <label>অথবা ছবি URL (ঐচ্ছিক)</label>
+        <input name="hero_image" value="{{ old('hero_image', $settings['hero_image'] ?? '') }}" placeholder="https://... অথবা uploads/home/...">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
     <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">লোগো</h3>
     <p class="muted" style="font-size:13px;margin-bottom:10px">দুটি লোগো আপলোড করুন। না দিলে ডিফল্ট লোগো ব্যবহার হবে।</p>
     <div class="form-grid two">
