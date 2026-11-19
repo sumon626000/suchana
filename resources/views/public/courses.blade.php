@@ -11,7 +11,7 @@
     <div class="courses-grid">
       @foreach ($courses as $course)
         <a href="{{ route('courses.show', $course) }}" class="course-card">
-          <div class="course-photo"><img src="{{ $course->image }}" alt="{{ $course->name_bn }}" loading="lazy" referrerpolicy="no-referrer"></div>
+          <div class="course-photo"><img src="{{ $course->imageUrl() }}" alt="{{ $course->name_bn }}" loading="lazy" referrerpolicy="no-referrer"></div>
           <div class="course-body">
             <h3 class="course-title" data-bn="{{ $course->name_bn }}" data-en="{{ $course->name_en }}">{{ $course->name_bn }}</h3>
             <div class="course-chips">

@@ -9,7 +9,7 @@
     <div class="grid-2 mt-3">
       <div>
         <div class="course-photo" style="border-radius:var(--radius);overflow:hidden">
-          <img src="{{ $course->image }}" alt="{{ $course->name_bn }}" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover">
+          <img src="{{ $course->imageUrl() }}" alt="{{ $course->name_bn }}" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover">
         </div>
       </div>
       <div>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\File;
 
 class Course extends Model
 {
@@ -30,5 +31,33 @@ class Course extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    public function imageUrl(): string
+    {
+        $image = $this->image;
+
+        if (! $image) {
+            return asset('images/logo-suchana.jpg');
+        }
+
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
+        }
+
+        if (str_starts_with($image, '/')) {
+            return asset(ltrim($image, '/'));
+        }
+
+        if (str_starts_with($image, 'uploads/') || str_starts_with($image, 'images/')) {
+            return asset($image);
+        }
+
+        $uploadPath = 'uploads/'.$image;
+        if (File::exists(public_path($uploadPath))) {
+            return asset($uploadPath);
+        }
+
+        return asset('storage/'.$image);
     }
 }

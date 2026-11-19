@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-  $heroImage = $courses->first()?->image ?? 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&q=80&auto=format&fit=crop';
+  $heroImage = $courses->first()?->imageUrl() ?? asset('images/logo-suchana.jpg');
 @endphp
 
 <section class="hero">
@@ -64,7 +64,7 @@
       <div class="slider-track">
         @foreach ($courses as $course)
           <a href="{{ route('courses.show', $course) }}" class="course-card slide-card">
-            <div class="course-photo"><img src="{{ $course->image }}" alt="{{ $course->name_bn }}" loading="lazy" referrerpolicy="no-referrer"></div>
+            <div class="course-photo"><img src="{{ $course->imageUrl() }}" alt="{{ $course->name_bn }}" loading="lazy" referrerpolicy="no-referrer"></div>
             <div class="course-body">
               <h3 class="course-title" data-bn="{{ $course->name_bn }}" data-en="{{ $course->name_en }}">{{ $course->name_bn }}</h3>
               <p class="slide-desc">{{ \Illuminate\Support\Str::limit($course->description_bn, 78) }}</p>
@@ -96,7 +96,7 @@
     <div class="courses-grid">
       @foreach ($courses as $course)
         <a href="{{ route('courses.show', $course) }}" class="course-card">
-          <div class="course-photo"><img src="{{ $course->image }}" alt="{{ $course->name_bn }}" loading="lazy" referrerpolicy="no-referrer"></div>
+          <div class="course-photo"><img src="{{ $course->imageUrl() }}" alt="{{ $course->name_bn }}" loading="lazy" referrerpolicy="no-referrer"></div>
           <div class="course-body">
             <h3 class="course-title" data-bn="{{ $course->name_bn }}" data-en="{{ $course->name_en }}">{{ $course->name_bn }}</h3>
             <div class="course-chips">
