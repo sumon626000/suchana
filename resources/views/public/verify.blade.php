@@ -26,7 +26,11 @@
             {{ $certificate->user->name ?? '—' }} — {{ $certificate->course->name_bn ?? '—' }}<br>
             নং: {{ $certificate->certificate_no }} · ইস্যু: {{ $certificate->issued_at?->format('d M Y') }}
           </div>
-          <a href="{{ route('certificate.show', $certificate->certificate_no) }}" class="btn btn-outline mt-2" target="_blank">সার্টিফিকেট দেখুন</a>
+          <div class="form-actions mt-2" style="display:flex;flex-wrap:wrap;gap:10px">
+            <a href="{{ route('certificate.pdf', $certificate->certificate_no) }}" class="btn btn-primary" target="_blank" data-bn="PDF ডাউনলোড" data-en="PDF Download">PDF ডাউনলোড</a>
+            <a href="{{ route('certificate.show', $certificate->certificate_no) }}" class="btn btn-outline" target="_blank" data-bn="প্রিন্ট" data-en="Print">প্রিন্ট</a>
+            <a href="{{ route('verify.code', $certificate->certificate_no) }}" class="btn btn-outline" data-bn="যাচাই করুন" data-en="Verify">যাচাই করুন</a>
+          </div>
         @else
           <div class="alert alert-error mt-3">এই কোডে কোনো সার্টিফিকেট পাওয়া যায়নি।</div>
         @endif

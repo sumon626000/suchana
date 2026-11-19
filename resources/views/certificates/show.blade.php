@@ -7,9 +7,14 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Hind Siliguri',system-ui,sans-serif;background:#eef2f5;color:#12202f;padding:24px}
-  .actions{max-width:900px;margin:0 auto 16px;display:flex;gap:10px;justify-content:flex-end}
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:999px;font-weight:600;font-size:14px;background:#0a7a4b;color:#fff;border:0;cursor:pointer}
+  .actions{max-width:900px;margin:0 auto 16px;display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:999px;font-weight:600;font-size:14px;background:#0a7a4b;color:#fff;border:0;cursor:pointer;text-decoration:none;line-height:1.2}
   .btn-outline{background:#fff;color:#12202f;border:1.5px solid #e2e8f0}
+  @media (max-width:640px){
+    body{padding:14px}
+    .actions{justify-content:center}
+    .btn{flex:1 1 auto;min-width:108px;padding:10px 14px;font-size:13px}
+  }
   .cert{max-width:900px;margin:0 auto;background:#fff;border:10px solid #0a7a4b;border-radius:8px;padding:44px 48px;position:relative;box-shadow:0 20px 60px -25px rgba(0,0,0,.35)}
   .cert::after{content:'';position:absolute;inset:8px;border:2px solid #c9a227;border-radius:4px;pointer-events:none}
   .logos{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px}

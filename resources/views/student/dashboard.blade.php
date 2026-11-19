@@ -163,8 +163,9 @@
               <div class="dash-cert-title">{{ $cert->course->name_bn ?? '—' }}</div>
               <div class="dash-cert-meta">{{ $cert->certificate_no }}<br>{{ $cert->issued_at?->format('d M Y') }}</div>
               <div class="dash-cert-actions">
-                <a href="{{ route('certificate.pdf', $cert->certificate_no) }}" class="btn btn-primary btn-xs">PDF</a>
-                <a href="{{ route('verify.code', $cert->certificate_no) }}" class="btn btn-outline btn-xs" data-bn="যাচাই" data-en="Verify">যাচাই</a>
+                <a href="{{ route('certificate.pdf', $cert->certificate_no) }}" class="btn btn-primary btn-xs" target="_blank" data-bn="PDF ডাউনলোড" data-en="PDF Download">PDF ডাউনলোড</a>
+                <a href="{{ route('certificate.show', $cert->certificate_no) }}" class="btn btn-outline btn-xs" target="_blank" data-bn="প্রিন্ট" data-en="Print">প্রিন্ট</a>
+                <a href="{{ route('verify.code', $cert->certificate_no) }}" class="btn btn-outline btn-xs" data-bn="যাচাই করুন" data-en="Verify">যাচাই করুন</a>
               </div>
             </div>
           @endforeach

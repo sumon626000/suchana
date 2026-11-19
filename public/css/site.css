@@ -487,7 +487,8 @@ html[data-theme="dark"][data-accent="orange"]{--green:#e07a2e;--green-soft:#2a16
 .dash-cert-badge{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fdf6e3;color:#b8860b;font-size:16px}
 .dash-cert-title{font-weight:700;font-size:14.5px;margin-bottom:4px}
 .dash-cert-meta{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px}
-.dash-cert-actions{display:flex;gap:6px}
+.dash-cert-actions{display:flex;flex-wrap:wrap;gap:6px}
+.dash-cert-actions .btn{text-decoration:none}
 .dash-timeline{display:grid}
 .dash-tl{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
 .dash-tl:last-child{border-bottom:0}
