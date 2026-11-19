@@ -21,9 +21,9 @@
   .sub{text-align:center;color:#5a6b7d;font-size:14px;margin-bottom:26px}
   .body{text-align:center;font-size:16px;line-height:1.9}
   .name{font-size:34px;font-weight:700;color:#0a7a4b;margin:8px 0;border-bottom:2px solid #c9a227;display:inline-block;padding:0 18px 4px}
-  .course{font-size:20px;font-weight:700;margin:6px 0}
+  .course{font-size:20px;font-weight:700;margin:6px 0;color:#12202f}
   .meta{display:flex;justify-content:space-between;gap:20px;margin-top:44px;font-size:13px}
-  .meta div{flex:1}
+  .meta div{flex:1;text-align:center}
   .meta .label{color:#5a6b7d;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
   .meta .value{font-weight:700;margin-top:2px}
   .sig{border-top:1px solid #12202f;padding-top:6px;text-align:center;margin-top:4px}
