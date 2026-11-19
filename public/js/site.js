@@ -274,4 +274,51 @@
       }
     });
   });
+
+  // ---------- Hero image slider (independent from course images) ----------
+  document.querySelectorAll('[data-hero-slider]').forEach(function (root) {
+    var slides = Array.prototype.slice.call(root.querySelectorAll('img'));
+    var dots = Array.prototype.slice.call(root.querySelectorAll('[data-hero-dot]'));
+    if (slides.length < 2) return;
+
+    var index = 0;
+    var intervalMs = parseInt(root.getAttribute('data-interval') || '5000', 10) || 5000;
+    var timer = null;
+
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (img, i) {
+        img.classList.toggle('is-active', i === index);
+      });
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    function start() {
+      stop();
+      timer = window.setInterval(function () {
+        show(index + 1);
+      }, intervalMs);
+    }
+
+    function stop() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        var target = parseInt(dot.getAttribute('data-hero-dot') || '0', 10) || 0;
+        show(target);
+        start();
+      });
+    });
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    start();
+  });
 })();

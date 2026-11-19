@@ -54,7 +54,15 @@ class AppServiceProvider extends ServiceProvider
                 'logo_suchana' => Settings::get('logo_suchana', ''),
                 'logo_sfdb' => Settings::get('logo_sfdb', ''),
                 'hero_image' => Settings::get('hero_image', ''),
-                'hero_image_url' => Settings::mediaUrl(Settings::get('hero_image', ''), asset('images/logo-suchana.jpg')),
+                'hero_images' => collect(range(1, 5))
+                    ->map(function (int $slot) {
+                        $path = Settings::get('hero_image_'.$slot, $slot === 1 ? Settings::get('hero_image', '') : '');
+
+                        return $path ? Settings::mediaUrl($path) : null;
+                    })
+                    ->filter()
+                    ->values()
+                    ->all(),
                 'hero_badge_bn' => Settings::get('hero_badge_bn', ''),
                 'hero_badge_en' => Settings::get('hero_badge_en', ''),
                 'about_bn' => Settings::get('about_bn', ''),

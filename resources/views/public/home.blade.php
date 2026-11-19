@@ -4,9 +4,9 @@
 
 @section('content')
 @php
-  $heroImage = ! empty($site['hero_image'])
-    ? $site['hero_image_url']
-    : ($courses->first()?->imageUrl() ?? asset('images/logo-suchana.jpg'));
+  $heroImages = ! empty($site['hero_images'])
+    ? $site['hero_images']
+    : [asset('images/logo-suchana.jpg')];
 @endphp
 
 <section class="hero">
@@ -27,8 +27,17 @@
           <a href="{{ route('courses.index') }}" class="btn btn-outline btn-lg" data-bn="কোর্স দেখুন" data-en="View Courses">কোর্স দেখুন</a>
         </div>
       </div>
-      <div class="hero-photo">
-        <img src="{{ $heroImage }}" alt="Suchana training" loading="eager" referrerpolicy="no-referrer">
+      <div class="hero-photo" data-hero-slider data-interval="5000">
+        @foreach ($heroImages as $index => $heroImage)
+          <img src="{{ $heroImage }}" alt="Suchana hero {{ $index + 1 }}" class="{{ $index === 0 ? 'is-active' : '' }}" loading="{{ $index === 0 ? 'eager' : 'lazy' }}" referrerpolicy="no-referrer">
+        @endforeach
+        @if (count($heroImages) > 1)
+          <div class="hero-slider-dots" aria-hidden="true">
+            @foreach ($heroImages as $index => $heroImage)
+              <button type="button" class="hero-slider-dot {{ $index === 0 ? 'active' : '' }}" data-hero-dot="{{ $index }}" aria-label="Hero slide {{ $index + 1 }}"></button>
+            @endforeach
+          </div>
+        @endif
       </div>
     </div>
   </div>

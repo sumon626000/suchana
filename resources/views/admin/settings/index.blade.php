@@ -76,29 +76,29 @@
   </div>
 
   <div class="card" style="margin-bottom:14px">
-    <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">হোমপেজ হিরো ছবি</h3>
-    <p class="muted" style="font-size:13px;margin-bottom:12px">হোমপেজের উপরের বড় ছবি এখান থেকে আপলোড করে বদলান (JPG/PNG/WebP, সর্বোচ্চ ৫MB)। কোর্স কার্ডের ছবি আলাদা — <strong>কোর্স → এডিট</strong> থেকে বদলাবেন।</p>
-
-    @if (! empty($settings['hero_image']))
-      <div style="margin-bottom:12px">
-        <img src="{{ \App\Support\Settings::mediaUrl($settings['hero_image']) }}" alt="" style="max-width:360px;max-height:200px;width:100%;object-fit:cover;border-radius:12px;border:1px solid var(--line)">
-        <div class="field" style="display:flex;align-items:center;gap:8px;margin-top:8px">
-          <input type="checkbox" name="remove_hero_image" value="1" id="removeHeroImage" style="width:18px;height:18px">
-          <label for="removeHeroImage" style="margin:0">বর্তমান হিরো ছবি মুছুন</label>
-        </div>
-      </div>
-    @endif
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">হিরো ইমেজ স্লাইডার (আলাদা)</h3>
+    <p class="muted" style="font-size:13px;margin-bottom:12px">হোমপেজের ডানপাশের বড় ছবি — কোর্স ইমেজের সাথে মিলবে না। সর্বোচ্চ <strong>৫টি</strong> ছবি আপলোড করুন; সাইটে প্রতি <strong>৫ সেকেন্ডে</strong> অটো চেঞ্জ হবে (JPG/PNG/WebP, max ৫MB)।</p>
 
     <div class="form-grid two">
-      <div class="field">
-        <label>হিরো ছবি আপলোড</label>
-        <input type="file" name="hero_image_file" accept="image/*" data-upload-preview="#heroImagePreview">
-        <div class="upload-preview" id="heroImagePreview" hidden></div>
-      </div>
-      <div class="field">
-        <label>অথবা ছবি URL (ঐচ্ছিক)</label>
-        <input name="hero_image" value="{{ old('hero_image', $settings['hero_image'] ?? '') }}" placeholder="https://... অথবা uploads/home/...">
-      </div>
+      @for ($slot = 1; $slot <= 5; $slot++)
+        @php
+          $key = 'hero_image_'.$slot;
+          $legacy = $slot === 1 ? ($settings['hero_image'] ?? '') : '';
+          $current = $settings[$key] ?? $legacy;
+        @endphp
+        <div class="field" style="border:1px solid var(--line);border-radius:12px;padding:12px">
+          <label>হিরো ছবি {{ $slot }}</label>
+          @if (! empty($current))
+            <img src="{{ \App\Support\Settings::mediaUrl($current) }}" alt="" style="max-width:100%;max-height:140px;width:100%;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:6px 0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <input type="checkbox" name="remove_hero_image[{{ $slot }}]" value="1" id="removeHero{{ $slot }}" style="width:18px;height:18px">
+              <label for="removeHero{{ $slot }}" style="margin:0">ছবি {{ $slot }} মুছুন</label>
+            </div>
+          @endif
+          <input type="file" name="hero_image_file[{{ $slot }}]" accept="image/*" data-upload-preview="#heroPreview{{ $slot }}">
+          <div class="upload-preview" id="heroPreview{{ $slot }}" hidden></div>
+        </div>
+      @endfor
     </div>
   </div>
 

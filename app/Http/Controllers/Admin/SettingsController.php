@@ -64,17 +64,16 @@ class SettingsController extends Controller
             'home_courses_lead_bn' => ['nullable', 'string', 'max:300'],
             'home_courses_lead_en' => ['nullable', 'string', 'max:300'],
             'theme_color' => ['required', 'in:sky,charcoal,green,purple,red,teal,orange'],
-            'hero_image' => ['nullable', 'string', 'max:500'],
         ]);
 
         $request->validate([
             'logo_suchana_file' => ['nullable', 'image', 'max:2048'],
             'logo_sfdb_file' => ['nullable', 'image', 'max:2048'],
-            'hero_image_file' => ['nullable', 'image', 'max:5120'],
-            'remove_hero_image' => ['nullable', 'boolean'],
+            'hero_image_file' => ['nullable', 'array', 'max:5'],
+            'hero_image_file.*' => ['nullable', 'image', 'max:5120'],
+            'remove_hero_image' => ['nullable', 'array'],
+            'remove_hero_image.*' => ['nullable', 'boolean'],
         ]);
-
-        unset($data['hero_image']);
 
         if ($request->hasFile('logo_suchana_file')) {
             $data['logo_suchana'] = $request->file('logo_suchana_file')->store('branding', 'public');
@@ -84,16 +83,25 @@ class SettingsController extends Controller
             $data['logo_sfdb'] = $request->file('logo_sfdb_file')->store('branding', 'public');
         }
 
-        if ($request->boolean('remove_hero_image')) {
-            $this->deletePublicUpload(Settings::get('hero_image'));
-            $data['hero_image'] = '';
+        for ($slot = 1; $slot <= 5; $slot++) {
+            $key = 'hero_image_'.$slot;
+
+            if ($request->boolean("remove_hero_image.$slot")) {
+                $this->deletePublicUpload(Settings::get($key));
+                $data[$key] = '';
+
+                continue;
+            }
+
+            if ($request->hasFile("hero_image_file.$slot")) {
+                $this->deletePublicUpload(Settings::get($key));
+                $data[$key] = $this->storePublicImage($request->file("hero_image_file.$slot"), 'home');
+            }
         }
 
-        if ($request->hasFile('hero_image_file')) {
-            $this->deletePublicUpload(Settings::get('hero_image'));
-            $data['hero_image'] = $this->storePublicImage($request->file('hero_image_file'), 'home');
-        } elseif ($request->filled('hero_image') && ! $request->boolean('remove_hero_image')) {
-            $data['hero_image'] = $request->string('hero_image')->toString();
+        // Keep legacy single key in sync with the first slide for older views.
+        if (array_key_exists('hero_image_1', $data)) {
+            $data['hero_image'] = $data['hero_image_1'];
         }
 
         $data['live_chat_enabled'] = $request->boolean('live_chat_enabled') ? '1' : '0';
