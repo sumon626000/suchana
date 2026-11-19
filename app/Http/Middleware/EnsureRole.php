@@ -27,17 +27,21 @@ class EnsureRole
                 abort(403, 'Unauthorized access.');
             }
 
-            $fallback = match ($user->role) {
-                'admin' => 'admin.dashboard',
-                'trainer' => 'trainer.dashboard',
-                default => 'student.dashboard',
-            };
-
+            // Guests never reach here; wrong-role users go to a safe public page
+            // instead of a dashboard that may itself error.
             $message = $user->role === 'student'
                 ? 'এই পেজটি শুধু অ্যাডমিন/প্রশিক্ষকদের জন্য।'
-                : 'আবেদন ফর্মটি শুধু শিক্ষার্থীদের জন্য। শিক্ষার্থী অ্যাকাউন্ট দিয়ে লগইন করুন।';
+                : 'আবেদন ফর্মটি শুধু শিক্ষার্থী অ্যাকাউন্টের জন্য। শিক্ষার্থী দিয়ে লগইন করুন।';
 
-            return redirect()->route($fallback)->with('error', $message);
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard')->with('error', $message);
+            }
+
+            if ($user->role === 'trainer') {
+                return redirect()->route('trainer.dashboard')->with('error', $message);
+            }
+
+            return redirect()->route('home')->with('error', $message);
         }
 
         return $next($request);

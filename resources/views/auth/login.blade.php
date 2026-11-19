@@ -1,6 +1,5 @@
 @extends('layouts.public')
 @section('title', 'লগইন — সুচনা SMTTI')
-@section('hide-errors')
 @section('content')
 <section class="section">
   <div class="container">

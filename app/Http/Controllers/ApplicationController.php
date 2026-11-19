@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Batch;
 use App\Models\Course;
 use App\Models\District;
 use App\Models\Thana;
@@ -18,12 +19,23 @@ class ApplicationController extends Controller
         $districts = District::orderBy('name_en')->get();
         $selectedCourse = $request->integer('course') ?: null;
 
-        $thanasByDistrict = Thana::with('district')->get()
-            ->groupBy(fn ($t) => $t->district->name_bn)
-            ->map(fn ($group) => $group->pluck('name_bn')->values())
+        $thanasByDistrict = Thana::query()
+            ->with('district')
+            ->whereHas('district')
+            ->get()
+            ->groupBy(fn (Thana $thana) => $thana->district?->name_bn ?? '')
+            ->reject(fn ($group, $districtName) => $districtName === '')
+            ->map(fn ($group) => $group->pluck('name_bn')->filter()->values())
             ->toArray();
 
-        return view('student.apply', compact('courses', 'districts', 'selectedCourse', 'thanasByDistrict'));
+        $batches = Batch::query()
+            ->with('course')
+            ->where('is_active', true)
+            ->whereHas('course')
+            ->orderBy('name_bn')
+            ->get();
+
+        return view('student.apply', compact('courses', 'districts', 'selectedCourse', 'thanasByDistrict', 'batches'));
     }
 
     public function store(Request $request): RedirectResponse

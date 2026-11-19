@@ -1,6 +1,6 @@
 @extends('layouts.public')
 @section('title', 'ভর্তি আবেদন — সুচনা SMTTI')
-@section('hide-errors')
+
 @section('content')
 <section class="section">
   <div class="container">
@@ -26,8 +26,8 @@
           <label data-bn="পছন্দের ব্যাচ (ঐচ্ছিক)" data-en="Preferred Batch (optional)">পছন্দের ব্যাচ (ঐচ্ছিক)</label>
           <select name="batch_id">
             <option value="">নির্বাচন করুন</option>
-            @foreach (\App\Models\Batch::with('course')->where('is_active', true)->get() as $batch)
-              <option value="{{ $batch->id }}" @selected(old('batch_id') == $batch->id)>{{ $batch->course->name_bn }} — {{ $batch->name_bn }}</option>
+            @foreach ($batches as $batch)
+              <option value="{{ $batch->id }}" @selected(old('batch_id') == $batch->id)>{{ $batch->course?->name_bn }} — {{ $batch->name_bn }}</option>
             @endforeach
           </select>
         </div>

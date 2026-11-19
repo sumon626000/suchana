@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Support\Settings;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Hostinger may miss `php artisan migrate`; keep certificate uploads safe.
+        try {
+            if (Schema::hasTable('certificates') && ! Schema::hasColumn('certificates', 'pdf_path')) {
+                Schema::table('certificates', function (Blueprint $table) {
+                    $table->string('pdf_path')->nullable()->after('status');
+                });
+            }
+        } catch (\Throwable) {
+            // Ignore during early boot / sqlite tests without table.
+        }
+
         View::composer('*', function ($view) {
             $view->with('site', [
                 'name' => Settings::get('site_name', 'Suchana'),
