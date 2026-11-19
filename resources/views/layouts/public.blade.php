@@ -40,7 +40,7 @@
       </span>
       <span class="brand-text">
         <span class="brand-name" data-bn="{{ $site['brand_title_bn'] }}" data-en="{{ $site['brand_title_en'] }}">{{ $site['brand_title_bn'] }}</span>
-        <span class="brand-sub" data-bn="ট্রেনিং ইনস্টিটিউট (SMTTI)" data-en="Training Institute (SMTTI)">ট্রেনিং ইনস্টিটিউট (SMTTI)</span>
+        <span class="brand-sub" data-bn="{{ $site['brand_sub_bn'] }}" data-en="{{ $site['brand_sub_en'] }}">{{ $site['brand_sub_bn'] }}</span>
       </span>
     </a>
 

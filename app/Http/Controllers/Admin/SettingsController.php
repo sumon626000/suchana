@@ -43,6 +43,8 @@ class SettingsController extends Controller
             'about_en' => ['nullable', 'string'],
             'brand_title_bn' => ['nullable', 'string', 'max:120'],
             'brand_title_en' => ['nullable', 'string', 'max:120'],
+            'brand_sub_bn' => ['nullable', 'string', 'max:120'],
+            'brand_sub_en' => ['nullable', 'string', 'max:120'],
             'hero_title_line1_bn' => ['nullable', 'string', 'max:120'],
             'hero_title_line1_en' => ['nullable', 'string', 'max:120'],
             'hero_title_line2_bn' => ['nullable', 'string', 'max:120'],

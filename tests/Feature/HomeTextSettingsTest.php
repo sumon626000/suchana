@@ -26,6 +26,8 @@ class HomeTextSettingsTest extends TestCase
             'theme_color' => 'sky',
             'brand_title_bn' => 'টেস্ট ব্র্যান্ড টাইটেল',
             'brand_title_en' => 'Test Brand Title',
+            'brand_sub_bn' => 'টেস্ট সাবটাইটেল (SMTTI)',
+            'brand_sub_en' => 'Test Subtitle (SMTTI)',
             'hero_title_line1_bn' => 'টেস্ট হিরো লাইন ১',
             'hero_title_line1_en' => 'Test Hero Line 1',
             'hero_title_line2_bn' => 'টেস্ট হিরো লাইন ২',
@@ -49,6 +51,7 @@ class HomeTextSettingsTest extends TestCase
         $home = $this->get(route('home'));
         $home->assertOk();
         $home->assertSee('টেস্ট ব্র্যান্ড টাইটেল', false);
+        $home->assertSee('টেস্ট সাবটাইটেল (SMTTI)', false);
         $home->assertSee('টেস্ট হিরো লাইন ১', false);
         $home->assertSee('টেস্ট চলমান কোর্স', false);
         $home->assertSee('টেস্ট আমাদের কোর্স', false);

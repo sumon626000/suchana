@@ -34,6 +34,8 @@ class SettingsSeeder extends Seeder
             'about_en' => 'Suchana Medical & Technical Training Institute (SMTTI) provides free skills training under government funding. Our goal is to make unemployed youth skilled.',
             'brand_title_bn' => 'সুচনা মেডিকেল এন্ড টেকনিক্যাল',
             'brand_title_en' => 'Suchana Medical & Technical',
+            'brand_sub_bn' => 'ট্রেনিং ইনস্টিটিউট (SMTTI)',
+            'brand_sub_en' => 'Training Institute (SMTTI)',
             'hero_title_line1_bn' => 'দক্ষতাই শক্তি,',
             'hero_title_line1_en' => 'Skill is Power,',
             'hero_title_line2_bn' => 'প্রশিক্ষণই ভবিষ্যৎ',

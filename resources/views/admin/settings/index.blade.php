@@ -137,10 +137,13 @@
     <h3 style="font-size:16px;font-weight:700;margin-bottom:8px">হোম পেজ টেক্সট</h3>
     <p class="muted" style="font-size:13px;margin-bottom:12px">হোমপেজের ব্র্যান্ড, হিরো ও কোর্স সেকশনের লেখা এখান থেকে বদলান। সেভ করলে সাইটে সাথে সাথে দেখাবে।</p>
 
-    <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">হেডার ব্র্যান্ড</h4>
+    <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">হেডার লোগো টেক্সট</h4>
+    <p class="muted" style="font-size:13px;margin-bottom:10px">লোগোর পাশের নাম ও সাবটাইটেল — হোম হেডারে দেখা যাবে।</p>
     <div class="form-grid two" style="margin-bottom:14px">
-      <div class="field"><label>ব্র্যান্ড টাইটেল (বাংলা)</label><input name="brand_title_bn" value="{{ old('brand_title_bn', $settings['brand_title_bn'] ?? 'সুচনা মেডিকেল এন্ড টেকনিক্যাল') }}"></div>
-      <div class="field"><label>Brand title (English)</label><input name="brand_title_en" value="{{ old('brand_title_en', $settings['brand_title_en'] ?? 'Suchana Medical & Technical') }}"></div>
+      <div class="field"><label>ব্র্যান্ড টাইটেল (বাংলা)</label><input name="brand_title_bn" value="{{ old('brand_title_bn', $settings['brand_title_bn'] ?? 'সুচনা মেডিকেল এন্ড টেকনিক্যাল') }}" placeholder="সুচনা মেডিকেল এন্ড টেকনিক্যাল"></div>
+      <div class="field"><label>Brand title (English)</label><input name="brand_title_en" value="{{ old('brand_title_en', $settings['brand_title_en'] ?? 'Suchana Medical & Technical') }}" placeholder="Suchana Medical & Technical"></div>
+      <div class="field"><label>সাবটাইটেল (বাংলা)</label><input name="brand_sub_bn" value="{{ old('brand_sub_bn', $settings['brand_sub_bn'] ?? 'ট্রেনিং ইনস্টিটিউট (SMTTI)') }}" placeholder="ট্রেনিং ইনস্টিটিউট (SMTTI)"></div>
+      <div class="field"><label>Subtitle (English)</label><input name="brand_sub_en" value="{{ old('brand_sub_en', $settings['brand_sub_en'] ?? 'Training Institute (SMTTI)') }}" placeholder="Training Institute (SMTTI)"></div>
     </div>
 
     <h4 style="font-size:14px;font-weight:700;margin:0 0 10px">হিরো সেকশন</h4>
