@@ -14,7 +14,7 @@ class AdminAuthController extends Controller
     public function showLogin(): View|RedirectResponse
     {
         if (Auth::check() && Auth::user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
+            return redirect('/admin/courses');
         }
 
         if (Auth::check() && ! Auth::user()->isAdmin()) {
@@ -53,8 +53,8 @@ class AdminAuthController extends Controller
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        // Always land on /admin/dashboard — bare /admin can 500 on Hostinger.
-        return redirect()->route('admin.dashboard');
+        // Bare /admin currently 500s on Hostinger; land on a known-good admin page.
+        return redirect('/admin/courses');
     }
 
     public function logout(Request $request): RedirectResponse
