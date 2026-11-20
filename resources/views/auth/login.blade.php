@@ -17,9 +17,12 @@
           <label data-bn="পাসওয়ার্ড" data-en="Password">পাসওয়ার্ড <span class="req">*</span></label>
           <input name="password" type="password" required autocomplete="current-password">
         </div>
-        <div class="field" style="display:flex;align-items:center;gap:8px">
-          <input type="checkbox" name="remember" value="1" style="width:auto">
-          <label style="margin:0" data-bn="মনে রাখুন" data-en="Remember me">মনে রাখুন</label>
+        <div class="field" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <label style="margin:0;display:flex;align-items:center;gap:8px">
+            <input type="checkbox" name="remember" value="1" style="width:auto">
+            <span data-bn="মনে রাখুন" data-en="Remember me">মনে রাখুন</span>
+          </label>
+          <a href="{{ route('password.request') }}" style="color:var(--green);font-weight:600;font-size:13px" data-bn="পাসওয়ার্ড ভুলে গেছেন?" data-en="Forgot password?">পাসওয়ার্ড ভুলে গেছেন?</a>
         </div>
         <div class="form-actions">
           <button class="btn btn-primary" type="submit" data-bn="লগইন" data-en="Login">লগইন</button>

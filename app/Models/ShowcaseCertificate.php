@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Settings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,14 +29,6 @@ class ShowcaseCertificate extends Model
 
     public function imageUrl(): string
     {
-        if (str_starts_with($this->image, 'http')) {
-            return $this->image;
-        }
-
-        if (str_starts_with($this->image, 'images/') || str_starts_with($this->image, '/images/')) {
-            return asset(ltrim($this->image, '/'));
-        }
-
-        return asset('storage/'.$this->image);
+        return Settings::mediaUrl($this->image);
     }
 }

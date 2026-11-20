@@ -17,6 +17,7 @@ $excludeDirNames = [
     'node_modules' => true,
     'deploy' => true,
     'tests' => true,
+    '.github' => true,
 ];
 
 $excludeFiles = [
@@ -37,7 +38,7 @@ if (is_file($zipPath)) {
     unlink($zipPath);
 }
 
-$zip = new ZipArchive();
+$zip = new ZipArchive;
 if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
     fwrite(STDERR, "Cannot create zip\n");
     exit(1);
@@ -86,6 +87,7 @@ foreach ($iterator as $file) {
 
     if ($file->isDir()) {
         $zip->addEmptyDir($rel);
+
         continue;
     }
 
@@ -131,29 +133,65 @@ MAIL_FROM_NAME="${APP_NAME}"
 ENV;
 $zip->addFromString('.env.hostinger', $env);
 
-// Include ready .env if present in deploy/
+// Ready Hostinger .env (DB + APP_URL filled)
 $envFile = __DIR__.DIRECTORY_SEPARATOR.'.env';
 if (is_file($envFile)) {
     $zip->addFile($envFile, '.env');
 }
 
-$readme = <<<'TXT'
-HOSTINGER DEPLOY (FULL ZIP WITH VENDOR)
-=======================================
-SQL is SEPARATE: smtii-database.sql (do not put SQL inside site root only)
+// Root .htaccess -> forwards to public/
+$rootHtaccess = __DIR__.DIRECTORY_SEPARATOR.'public_html.htaccess';
+if (is_file($rootHtaccess)) {
+    $zip->addFile($rootHtaccess, '.htaccess');
+}
 
-1) Upload this ZIP into public_html and EXTRACT
-2) Domains -> suchana.bd -> Document Root = public_html/public
-3) Keep/edit .env (DB already set if included)
-4) phpMyAdmin -> import smtii-database.sql
-5) Terminal:
+$readme = <<<'TXT'
+SUCHANA.BD — CLEAN HOSTINGER INSTALL (A-Z)
+==========================================
+Files:
+- This ZIP = full site (vendor included) + ready .env
+- smtii-database.sql = SEPARATE (same deploy folder on PC)
+
+CLEAN INSTALL STEPS
+-------------------
+1) hPanel -> Websites -> suchana.bd -> File Manager
+   Open domain public_html:
+   /home/u987493658/domains/suchana.bd/public_html
+
+2) DELETE everything inside that public_html (old/wrong files).
+   Do NOT leave nested public_html or tttttttt folders.
+
+3) Upload this ZIP into that empty public_html -> Extract.
+   After extract you must see: app, public, vendor, artisan, .env
+
+4) Domains -> suchana.bd -> Document Root =
+   public_html/public
+   (full path often ends with .../domains/suchana.bd/public_html/public)
+
+5) phpMyAdmin -> database u987493658_suchana
+   -> Import smtii-database.sql
+   (if tables already exist, drop old tables first OR import fresh DB)
+
+6) hPanel Terminal / SSH:
    cd ~/domains/suchana.bd/public_html
    php artisan storage:link
-   chmod -R 775 storage bootstrap/cache
    php artisan config:clear
-6) PHP version: 8.3 or 8.4
+   php artisan route:clear
+   php artisan view:clear
+   chmod -R 775 storage bootstrap/cache
 
-Demo logins:
+7) PHP version: 8.3 or 8.4 (hPanel -> PHP Configuration)
+
+8) Open https://suchana.bd
+   Hard refresh: Ctrl+F5
+
+.env already has:
+APP_URL=https://suchana.bd
+DB_DATABASE / DB_USERNAME = u987493658_suchana
+SESSION_DRIVER=file
+CACHE_STORE=file
+
+Demo logins (if SQL imported):
 admin / password
 student / password
 trainer / password

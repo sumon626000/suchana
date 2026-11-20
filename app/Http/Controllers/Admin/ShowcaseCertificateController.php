@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShowcaseCertificate;
+use App\Support\PublicUpload;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ShowcaseCertificateController extends Controller
@@ -21,7 +21,7 @@ class ShowcaseCertificateController extends Controller
     public function create(): View
     {
         return view('admin.showcase-certificates.form', [
-            'certificate' => new ShowcaseCertificate(),
+            'certificate' => new ShowcaseCertificate,
         ]);
     }
 
@@ -32,11 +32,16 @@ class ShowcaseCertificateController extends Controller
             'title_en' => ['nullable', 'string', 'max:120'],
             'subtitle_bn' => ['nullable', 'string', 'max:160'],
             'subtitle_en' => ['nullable', 'string', 'max:160'],
-            'image' => ['required', 'image', 'max:5120'],
+            'image' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:5120'],
             'sort_order' => ['nullable', 'integer'],
+        ], [
+            'image.required' => 'সার্টিফিকেট ছবি আপলোড করুন।',
+            'image.image' => 'শুধু JPG, PNG, WebP বা GIF আপলোড করা যাবে।',
+            'image.mimes' => 'শুধু JPG, PNG, WebP বা GIF আপলোড করা যাবে।',
+            'image.max' => 'ছবি সর্বোচ্চ ৫MB হতে পারবে।',
         ]);
 
-        $data['image'] = $request->file('image')->store('showcase-certificates', 'public');
+        $data['image'] = PublicUpload::store($request->file('image'), 'showcase-certificates', ['jpg', 'jpeg', 'png', 'webp', 'gif']);
         $data['is_active'] = $request->boolean('is_active');
         $data['sort_order'] = (int) $request->input('sort_order', 0);
 
@@ -60,14 +65,13 @@ class ShowcaseCertificateController extends Controller
             'title_en' => ['nullable', 'string', 'max:120'],
             'subtitle_bn' => ['nullable', 'string', 'max:160'],
             'subtitle_en' => ['nullable', 'string', 'max:160'],
-            'image' => ['nullable', 'image', 'max:5120'],
+            'image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:5120'],
             'sort_order' => ['nullable', 'integer'],
         ]);
 
         if ($request->hasFile('image')) {
-            $old = $showcase_certificate->image;
-            $data['image'] = $request->file('image')->store('showcase-certificates', 'public');
-            $this->deleteLocalFile($old);
+            PublicUpload::delete($showcase_certificate->image);
+            $data['image'] = PublicUpload::store($request->file('image'), 'showcase-certificates', ['jpg', 'jpeg', 'png', 'webp', 'gif']);
         } else {
             unset($data['image']);
         }
@@ -83,20 +87,9 @@ class ShowcaseCertificateController extends Controller
 
     public function destroy(ShowcaseCertificate $showcase_certificate): RedirectResponse
     {
-        $this->deleteLocalFile($showcase_certificate->image);
+        PublicUpload::delete($showcase_certificate->image);
         $showcase_certificate->delete();
 
         return back()->with('success', 'সার্টিফিকেট শোকেস থেকে মুছে ফেলা হয়েছে।');
-    }
-
-    private function deleteLocalFile(?string $path): void
-    {
-        if (! $path || str_starts_with($path, 'http') || str_starts_with($path, 'images/')) {
-            return;
-        }
-
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
     }
 }

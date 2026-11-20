@@ -60,4 +60,16 @@ class StudentController extends Controller
 
         return back()->with('success', 'শিক্ষার্থীর পাসওয়ার্ড রিসেট হয়েছে।');
     }
+
+    public function destroy(User $student): RedirectResponse
+    {
+        abort_unless($student->role === 'student', 404);
+
+        $name = $student->name;
+        $student->delete();
+
+        return redirect()
+            ->route('admin.students.index')
+            ->with('success', "শিক্ষার্থী \"{$name}\" মুছে ফেলা হয়েছে।");
+    }
 }

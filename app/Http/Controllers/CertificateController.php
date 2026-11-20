@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\User;
+use App\Services\TransactionalMailer;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Endroid\QrCode\Builder\Builder;
@@ -22,9 +23,17 @@ class CertificateController extends Controller
 {
     public function index(): View
     {
-        $certificates = Certificate::with(['user', 'course'])->latest()->get();
-        $students = User::where('role', 'student')->orderBy('name')->get();
-        $courses = Course::orderBy('sort_order')->get();
+        $certificates = Certificate::query()
+            ->with(['user', 'course'])
+            ->latest()
+            ->get();
+        $students = User::query()
+            ->where('role', 'student')
+            ->orderBy('name')
+            ->get(['id', 'name', 'mobile']);
+        $courses = Course::query()
+            ->orderBy('sort_order')
+            ->get(['id', 'name_bn']);
 
         return view('admin.certificates.index', compact('certificates', 'students', 'courses'));
     }
@@ -211,7 +220,7 @@ class CertificateController extends Controller
 
     private function createCertificate(int $userId, int $courseId, int $issuedBy): Certificate
     {
-        return Certificate::create([
+        $certificate = Certificate::create([
             'user_id' => $userId,
             'course_id' => $courseId,
             'certificate_no' => $this->uniqueCertificateNo(),
@@ -220,6 +229,14 @@ class CertificateController extends Controller
             'issued_by' => $issuedBy,
             'status' => 'issued',
         ]);
+
+        try {
+            app(TransactionalMailer::class)->certificateIssued($certificate);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        return $certificate;
     }
 
     private function storeCertificatePdf(UploadedFile $file, Certificate $certificate): string

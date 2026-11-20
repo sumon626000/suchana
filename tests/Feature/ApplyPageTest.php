@@ -48,7 +48,7 @@ class ApplyPageTest extends TestCase
 
         $response = $this->actingAs($admin)->get(route('applications.create', ['course' => 1]));
 
-        $response->assertRedirect(route('admin.dashboard'));
+        $response->assertRedirect(route('home'));
         $response->assertSessionHas('error');
     }
 }

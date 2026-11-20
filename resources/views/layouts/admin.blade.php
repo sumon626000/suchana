@@ -18,10 +18,8 @@
 <body>
 
 @php
-  $logo1 = $site['logo_suchana'] ?? '';
-  $logo1Src = $logo1 ? (str_starts_with($logo1, 'http') ? $logo1 : asset('storage/'.$logo1)) : asset('images/logo-suchana.jpg');
-  $logo2 = $site['logo_sfdb'] ?? '';
-  $logo2Src = $logo2 ? (str_starts_with($logo2, 'http') ? $logo2 : asset('storage/'.$logo2)) : asset('images/logo-sfdb.jpg');
+  $logo1Src = \App\Support\Settings::logoUrl($site['logo_suchana'] ?? '', 'images/logo-suchana.jpg');
+  $logo2Src = \App\Support\Settings::logoUrl($site['logo_sfdb'] ?? '', 'images/logo-sfdb.jpg');
 @endphp
 
 <div class="admin-shell">
@@ -62,6 +60,7 @@
             ['admin.notifications.index', 'নোটিফিকেশন', 'Notifications', '✎'],
             ['admin.backups.index', 'ব্যাকআপ', 'Backups', '⟲'],
             ['admin.support.index', 'সহায়তা বার্তা', 'Support', '✆'],
+            ['admin.profile.password.edit', 'পাসওয়ার্ড', 'Password', '⚿'],
             ['admin.settings.index', 'সেটিংস', 'Settings', '⚙'],
           ]],
         ];

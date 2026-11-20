@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ShowcaseCertificateController;
 use App\Http\Controllers\Admin\StaffController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SupportController;
@@ -65,6 +67,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/forgot-password', [PasswordResetController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'store'])->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'edit'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'update'])->name('password.update');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -127,6 +134,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/students/{student}', [AdminStudentController::class, 'show'])->name('students.show');
         Route::post('/students/{student}/toggle', [AdminStudentController::class, 'toggle'])->name('students.toggle');
         Route::post('/students/{student}/password', [AdminStudentController::class, 'resetPassword'])->name('students.password');
+        Route::delete('/students/{student}', [AdminStudentController::class, 'destroy'])->name('students.destroy');
 
         Route::get('/attendance/report', [AttendanceController::class, 'report'])->name('attendance.report');
         Route::get('/attendance/export', [AttendanceController::class, 'export'])->name('attendance.export');
@@ -136,6 +144,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/certificates/auto', [CertificateController::class, 'auto'])->name('certificates.auto');
         Route::post('/certificates/{certificate}/pdf', [CertificateController::class, 'uploadPdf'])->name('certificates.upload-pdf');
         Route::delete('/certificates/{certificate}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
+
+        Route::get('/profile/password', [AdminProfileController::class, 'edit'])->name('profile.password.edit');
+        Route::post('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
 
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');

@@ -29,6 +29,14 @@
     <label style="margin:0">সক্রিয়</label>
   </div>
 
+  <div class="field" style="display:flex;align-items:flex-start;gap:8px;margin-top:8px">
+    <input type="checkbox" name="notify_users" value="1" style="width:18px;height:18px;margin-top:2px" @checked(old('notify_users', ! $notice->exists))>
+    <label style="margin:0">
+      সব সক্রিয় ইউজারকে ইমেইল পাঠান
+      <span class="muted" style="display:block;font-size:12px;font-weight:400">নোটিশ সেভ হলে রেজিস্টার্ড ইমেইলে নোটিফিকেশন যাবে।</span>
+    </label>
+  </div>
+
   <div class="admin-actions mt-2">
     <button class="btn btn-primary" type="submit">সেভ করুন</button>
     <a href="{{ route('admin.notices.index') }}" class="btn btn-outline">বাতিল</a>

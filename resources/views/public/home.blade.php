@@ -24,6 +24,7 @@
         <p class="hero-subtitle" data-bn="{{ $site['hero_subtitle_bn'] }}" data-en="{{ $site['hero_subtitle_en'] }}">{{ $site['hero_subtitle_bn'] }}</p>
         <div class="hero-ctas">
           <a href="{{ url('/apply') }}" class="btn btn-primary btn-lg" data-bn="ভর্তি হোন" data-en="Apply Now">ভর্তি হোন</a>
+          <a href="{{ url('/register') }}" class="btn btn-outline btn-lg" data-bn="রেজিস্ট্রেশন করুন" data-en="Register Now">রেজিস্ট্রেশন করুন</a>
           <a href="{{ route('courses.index') }}" class="btn btn-outline btn-lg" data-bn="কোর্স দেখুন" data-en="View Courses">কোর্স দেখুন</a>
         </div>
       </div>
@@ -39,6 +40,19 @@
           </div>
         @endif
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero-apply">
+  <div class="container hero-apply-inner">
+    <div class="hero-apply-copy">
+      <h2 class="hero-apply-title" data-bn="আজই আবেদন করুন" data-en="Apply Today">আজই আবেদন করুন</h2>
+      <p class="hero-apply-lead" data-bn="সরকারি অর্থায়নে বিনামূল্যে প্রশিক্ষণ — সীমিত আসন।" data-en="Free government-funded training — limited seats.">সরকারি অর্থায়নে বিনামূল্যে প্রশিক্ষণ — সীমিত আসন।</p>
+    </div>
+    <div class="hero-apply-actions">
+      <a href="{{ url('/apply') }}" class="btn btn-primary btn-lg" data-bn="আবেদন করুন" data-en="Apply Now">আবেদন করুন</a>
+      <a href="{{ url('/register') }}" class="btn btn-outline btn-lg" data-bn="রেজিস্ট্রেশন করুন" data-en="Register Now">রেজিস্ট্রেশন করুন</a>
     </div>
   </div>
 </section>
@@ -249,7 +263,7 @@
     <h2 class="section-title" data-bn="আমাদের গ্যালারি" data-en="Our Gallery">আমাদের গ্যালারি</h2>
     <div class="gallery-grid mt-3">
       @foreach ($gallery as $img)
-        @php $src = str_starts_with($img->image, 'http') ? $img->image : asset('storage/'.$img->image); @endphp
+        @php $src = $img->imageUrl(); @endphp
         <figure class="gallery-item">
           <img src="{{ $src }}" alt="{{ $img->title_bn }}" data-lightbox="{{ $src }}" loading="lazy">
           @if ($img->title_bn)<figcaption>{{ $img->title_bn }}</figcaption>@endif
@@ -260,11 +274,4 @@
 </section>
 @endif
 
-<section class="section" style="background:linear-gradient(135deg,var(--green-soft),var(--blue-soft))">
-  <div class="container center">
-    <h2 class="section-title" data-bn="আজই আবেদন করুন" data-en="Apply Today">আজই আবেদন করুন</h2>
-    <p class="section-lead" data-bn="সরকারি অর্থায়নে বিনামূল্যে প্রশিক্ষণ — সীমিত আসন।" data-en="Free government-funded training — limited seats.">সরকারি অর্থায়নে বিনামূল্যে প্রশিক্ষণ — সীমিত আসন।</p>
-    <a href="{{ url('/register') }}" class="btn btn-primary btn-lg" data-bn="রেজিস্ট্রেশন করুন" data-en="Register Now">রেজিস্ট্রেশন করুন</a>
-  </div>
-</section>
 @endsection

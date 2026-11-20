@@ -5,8 +5,8 @@
 @media(max-width:900px){.admin-main{padding:14px}}
 
 /* Brand */
-.admin-brand{display:flex;align-items:center;gap:8px;padding:2px 4px 12px;border-bottom:1px solid var(--line);margin-bottom:8px}
-.admin-brand img{height:34px;width:auto;border-radius:6px}
+.admin-brand{display:flex;align-items:center;gap:8px;padding:2px 4px 12px;border-bottom:1px solid var(--line);margin-bottom:8px;overflow:visible}
+.admin-brand img{height:34px;width:auto;max-width:56px;max-height:34px;object-fit:contain;object-position:center;border-radius:6px;display:block;background:#fff;padding:2px;box-sizing:border-box}
 .admin-brand-text{line-height:1.15;min-width:0}
 .admin-brand-name{font-weight:700;font-size:15px}
 .admin-brand-sub{font-size:11px;color:var(--muted);white-space:nowrap}

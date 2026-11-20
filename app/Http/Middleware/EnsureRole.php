@@ -31,21 +31,28 @@ class EnsureRole
                 abort(403, 'Unauthorized access.');
             }
 
-            // Guests never reach here; wrong-role users go to a safe public page
-            // instead of a dashboard that may itself error.
-            $message = $user->role === 'student'
-                ? 'এই পেজটি শুধু অ্যাডমিন/প্রশিক্ষকদের জন্য।'
-                : 'আবেদন ফর্মটি শুধু শিক্ষার্থী অ্যাকাউন্টের জন্য। শিক্ষার্থী দিয়ে লগইন করুন।';
-
+            // Keep admin inside /admin and student/user flows on the public site.
+            // Never dump admins into the admin panel when they click a user-panel link.
             if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('error', $message);
+                return redirect()->route('home')->with(
+                    'error',
+                    'এটি ইউজার/শিক্ষার্থী পেজ। অ্যাডমিন প্যানেল শুধু /admin থেকে ব্যবহার করুন।'
+                );
             }
 
             if ($user->role === 'trainer') {
-                return redirect()->route('trainer.dashboard')->with('error', $message);
+                return redirect()->route('trainer.dashboard')->with(
+                    'error',
+                    'এই পেজটি আপনার রোলের জন্য নয়।'
+                );
             }
 
-            return redirect()->route('home')->with('error', $message);
+            return redirect()->route('home')->with(
+                'error',
+                $user->role === 'student'
+                    ? 'এই পেজটি শুধু অ্যাডমিন/প্রশিক্ষকদের জন্য।'
+                    : 'আবেদন ফর্মটি শুধু শিক্ষার্থী অ্যাকাউন্টের জন্য। শিক্ষার্থী দিয়ে লগইন করুন।'
+            );
         }
 
         return $next($request);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SupportMessage;
+use App\Services\TransactionalMailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ class SupportController extends Controller
         ]);
 
         $message = SupportMessage::create($data + ['status' => 'new']);
+
+        app(TransactionalMailer::class)->supportMessageReceived($message);
 
         if ($request->expectsJson()) {
             return response()->json(['ok' => true, 'id' => $message->id]);

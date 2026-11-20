@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\TransactionalMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,20 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showRegister(): View
+    public function showRegister(): View|RedirectResponse
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->isAdmin()) {
+                return redirect()->route('home')->with(
+                    'error',
+                    'অ্যাডমিন সেশন চালু আছে। ইউজার রেজিস্ট্রেশনের জন্য আগে লগআউট করুন, অথবা /admin ব্যবহার করুন।'
+                );
+            }
+
+            return redirect()->intended($this->redirectPathFor($user));
+        }
+
         return view('auth.register');
     }
 
@@ -43,12 +56,23 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
+        app(TransactionalMailer::class)->userRegistered($user);
+
         return redirect()->route('student.dashboard')
             ->with('success', 'রেজিস্ট্রেশন সফল হয়েছে। স্বাগতম!');
     }
 
-    public function showLogin(): View
+    public function showLogin(): View|RedirectResponse
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->intended($this->redirectPathFor($user));
+        }
+
         return view('auth.login');
     }
 

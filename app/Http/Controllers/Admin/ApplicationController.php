@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
-use App\Models\NotificationLog;
-use App\Models\NotificationTemplate;
+use App\Services\TransactionalMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -90,37 +89,16 @@ class ApplicationController extends Controller
 
         $course = $application->course;
 
-        if ($old !== 'approved' && $data['status'] === 'approved' && $course->seats_available > 0) {
+        if ($old !== 'approved' && $data['status'] === 'approved' && $course && $course->seats_available > 0) {
             $course->decrement('seats_available');
-        } elseif ($old === 'approved' && $data['status'] !== 'approved') {
+        } elseif ($old === 'approved' && $data['status'] !== 'approved' && $course) {
             $course->increment('seats_available');
         }
 
-        $this->logNotification($application, 'status_'.$data['status']);
-
-        return back()->with('success', 'আবেদনের স্ট্যাটাস আপডেট হয়েছে।');
-    }
-
-    private function logNotification(Application $application, string $templateKey): void
-    {
-        $template = NotificationTemplate::where('key', $templateKey)->where('is_active', true)->first();
-
-        if (! $template) {
-            return;
+        if ($old !== $data['status']) {
+            app(TransactionalMailer::class)->applicationStatusChanged($application->fresh(['course']));
         }
 
-        $body = str_replace(
-            ['{name}', '{app_no}', '{course}', '{status}', '{cert_no}'],
-            [$application->full_name, $application->application_no, $application->course?->name_bn ?? '', $application->status, ''],
-            $template->body_bn
-        );
-
-        NotificationLog::create([
-            'template_key' => $templateKey,
-            'channel' => $template->channel,
-            'recipient' => $template->channel === 'email' ? ($application->email ?: $application->mobile) : $application->mobile,
-            'message' => $body,
-            'status' => 'queued',
-        ]);
+        return back()->with('success', 'আবেদনের স্ট্যাটাস আপডেট হয়েছে। ইমেইল পাঠানো হয়েছে।');
     }
 }

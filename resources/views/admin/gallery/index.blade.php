@@ -7,7 +7,7 @@
 </div>
 <div class="gallery-grid">
   @forelse ($images as $img)
-    @php $src = str_starts_with($img->image, 'http') ? $img->image : asset('storage/'.$img->image); @endphp
+    @php $src = $img->imageUrl(); @endphp
     <figure class="gallery-item">
       <img src="{{ $src }}" alt="{{ $img->title_bn }}" class="admin-gallery-thumb" data-lightbox="{{ $src }}" loading="lazy">
       <figcaption>

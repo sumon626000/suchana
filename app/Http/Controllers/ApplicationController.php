@@ -7,6 +7,7 @@ use App\Models\Batch;
 use App\Models\Course;
 use App\Models\District;
 use App\Models\Thana;
+use App\Services\TransactionalMailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -78,6 +79,9 @@ class ApplicationController extends Controller
         $data['status'] = 'pending';
 
         $application = Application::create($data);
+        $application->load('course');
+
+        app(TransactionalMailer::class)->applicationReceived($application);
 
         return redirect()->route('applications.show', $application)
             ->with('success', 'আবেদন সফলভাবে জমা হয়েছে। আপনার আবেদন নম্বর: '.$application->application_no);

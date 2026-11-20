@@ -19,8 +19,12 @@
     <div class="field"><label>Subtitle (English)</label><input name="subtitle_en" value="{{ old('subtitle_en', $certificate->subtitle_en) }}"></div>
     <div class="field">
       <label>সার্টিফিকেট ছবি {{ $certificate->exists ? '(নতুন দিলে পরিবর্তন হবে)' : '*' }}</label>
-      <input type="file" name="image" accept="image/*" id="showcaseCertInput" data-upload-preview="#showcaseCertPreview" @if(!$certificate->exists) required @endif>
+      <p class="muted" style="font-size:12px;margin:0 0 6px">JPG / PNG / WebP / GIF (max ৫MB)</p>
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" id="showcaseCertInput" data-upload-preview="#showcaseCertPreview" @if(!$certificate->exists) required @endif>
       <div class="upload-preview" id="showcaseCertPreview" hidden></div>
+      @error('image')
+        <p class="muted" style="color:#c8202f;font-size:12px;margin-top:4px">{{ $message }}</p>
+      @enderror
     </div>
     <div class="field"><label>ক্রম (sort order)</label><input type="number" name="sort_order" value="{{ old('sort_order', $certificate->sort_order ?? 0) }}"></div>
   </div>

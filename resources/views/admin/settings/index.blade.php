@@ -32,8 +32,16 @@
     <h3 style="font-size:16px;font-weight:700;margin-bottom:12px">সোশ্যাল ও সাপোর্ট আইকন</h3>
     <p class="muted" style="font-size:13px;margin-bottom:10px">এই আইকনগুলো পাবলিক সাইটের নিচে ডানে ভাসমান অবস্থায় দেখাবে। খালি রাখলে ওই আইকন দেখাবে না।</p>
     <div class="form-grid two">
-      <div class="field"><label>WhatsApp নম্বর (দেশের কোড সহ, শুধু সংখ্যা)</label><input name="whatsapp_number" value="{{ old('whatsapp_number', $settings['whatsapp_number'] ?? '') }}" placeholder="8801700000000"></div>
-      <div class="field"><label>Facebook পেজ URL</label><input name="facebook_url" value="{{ old('facebook_url', $settings['facebook_url'] ?? '') }}" placeholder="https://facebook.com/yourpage"></div>
+      <div class="field">
+        <label>WhatsApp নম্বর</label>
+        <input name="whatsapp_number" value="{{ old('whatsapp_number', $settings['whatsapp_number'] ?? '') }}" placeholder="016XXXXXXXX বা 88016XXXXXXXX">
+        <p class="muted" style="font-size:12px;margin-top:4px">যেকোনো ফরম্যাট দিন (০১৬… / +৮৮০… ) — অটো ঠিক হয়ে যাবে।</p>
+      </div>
+      <div class="field">
+        <label>Facebook পেজ URL</label>
+        <input name="facebook_url" value="{{ old('facebook_url', $settings['facebook_url'] ?? '') }}" placeholder="https://facebook.com/yourpage">
+        <p class="muted" style="font-size:12px;margin-top:4px">সম্পূর্ণ লিংক দিন। https না দিলেও অটো যোগ হবে।</p>
+      </div>
       <div class="field"><label>YouTube URL (ঐচ্ছিক)</label><input name="youtube_url" value="{{ old('youtube_url', $settings['youtube_url'] ?? '') }}"></div>
       <div class="field"><label>Instagram URL (ঐচ্ছিক)</label><input name="instagram_url" value="{{ old('instagram_url', $settings['instagram_url'] ?? '') }}"></div>
     </div>
@@ -76,8 +84,22 @@
   </div>
 
   <div class="card" style="margin-bottom:14px">
+    @php
+      $activeHeroSlots = collect(range(1, 5))->filter(function ($slot) use ($settings) {
+        $key = 'hero_image_'.$slot;
+        $legacy = $slot === 1 ? ($settings['hero_image'] ?? '') : '';
+        return filled($settings[$key] ?? $legacy);
+      })->count();
+    @endphp
     <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">হিরো ইমেজ স্লাইডার (আলাদা)</h3>
-    <p class="muted" style="font-size:13px;margin-bottom:12px">হোমপেজের ডানপাশের বড় ছবি — কোর্স ইমেজের সাথে মিলবে না। সর্বোচ্চ <strong>৫টি</strong> ছবি আপলোড করুন; সাইটে প্রতি <strong>৫ সেকেন্ডে</strong> অটো চেঞ্জ হবে (JPG/PNG/WebP, max ৫MB)।</p>
+    <p class="muted" style="font-size:13px;margin-bottom:8px">হোমপেজের ডানপাশের বড় ছবি — কোর্স ইমেজের সাথে মিলবে না। সর্বোচ্চ <strong>৫টি</strong> ছবি; সাইটে প্রতি <strong>৫ সেকেন্ডে</strong> অটো চেঞ্জ (JPG/PNG/WebP/GIF, max ৫MB)।</p>
+    <p style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--green)">এখন সক্রিয়: {{ $activeHeroSlots }}/৫টি ছবি</p>
+
+    <div class="field" style="border:1px dashed var(--line);border-radius:12px;padding:12px;margin-bottom:14px;background:rgba(10,122,75,.04)">
+      <label>একসাথে একাধিক ছবি বাছুন (সহজ উপায়)</label>
+      <input type="file" name="hero_images_bulk[]" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" multiple>
+      <p class="muted" style="font-size:12px;margin-top:6px">২–৫টি ছবি একসাথে সিলেক্ট করুন → নিচে <strong>সেটিংস সংরক্ষণ</strong> চাপুন। ছবিগুলো স্লট ১, ২, ৩… এ যাবে।</p>
+    </div>
 
     <div class="form-grid two">
       @for ($slot = 1; $slot <= 5; $slot++)
@@ -87,7 +109,7 @@
           $current = $settings[$key] ?? $legacy;
         @endphp
         <div class="field" style="border:1px solid var(--line);border-radius:12px;padding:12px">
-          <label>হিরো ছবি {{ $slot }}</label>
+          <label>হিরো ছবি {{ $slot }}@if (! empty($current)) <span style="color:var(--green);font-weight:600">✓</span>@endif</label>
           @if (! empty($current))
             <img src="{{ \App\Support\Settings::mediaUrl($current) }}" alt="" style="max-width:100%;max-height:140px;width:100%;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:6px 0">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -95,32 +117,47 @@
               <label for="removeHero{{ $slot }}" style="margin:0">ছবি {{ $slot }} মুছুন</label>
             </div>
           @endif
-          <input type="file" name="hero_image_file[{{ $slot }}]" accept="image/*" data-upload-preview="#heroPreview{{ $slot }}">
+          <input type="file" name="hero_image_file[{{ $slot }}]" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" data-upload-preview="#heroPreview{{ $slot }}">
           <div class="upload-preview" id="heroPreview{{ $slot }}" hidden></div>
+          @error('hero_image_file.'.$slot)
+            <p class="muted" style="color:#c8202f;font-size:12px;margin-top:4px">{{ $message }}</p>
+          @enderror
         </div>
       @endfor
     </div>
+    @error('hero_images_bulk')
+      <p class="muted" style="color:#c8202f;font-size:12px;margin-top:8px">{{ $message }}</p>
+    @enderror
+    @error('hero_images_bulk.*')
+      <p class="muted" style="color:#c8202f;font-size:12px;margin-top:8px">{{ $message }}</p>
+    @enderror
   </div>
 
   <div class="card" style="margin-bottom:14px">
     <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">লোগো</h3>
-    <p class="muted" style="font-size:13px;margin-bottom:10px">দুটি লোগো আপলোড করুন। না দিলে ডিফল্ট লোগো ব্যবহার হবে।</p>
+    <p class="muted" style="font-size:13px;margin-bottom:10px">JPG / PNG / WebP / GIF আপলোড করুন (max ৪MB)। সাইজ অটো মিলবে — কেটে যাবে না। না দিলে ডিফল্ট লোগো থাকবে।</p>
     <div class="form-grid two">
       <div class="field">
         <label>সুচনা লোগো</label>
         @if (! empty($settings['logo_suchana']))
-          <img src="{{ str_starts_with($settings['logo_suchana'], 'http') ? $settings['logo_suchana'] : asset('storage/'.$settings['logo_suchana']) }}" alt="" style="height:54px;margin-bottom:6px;border-radius:8px;border:1px solid var(--line)">
+          <img src="{{ \App\Support\Settings::logoUrl($settings['logo_suchana'], 'images/logo-suchana.jpg') }}" alt="" class="logo-preview-img">
         @endif
-        <input type="file" name="logo_suchana_file" accept="image/*" data-upload-preview="#logo1Preview">
+        <input type="file" name="logo_suchana_file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" data-upload-preview="#logo1Preview">
         <div class="upload-preview" id="logo1Preview" hidden></div>
+        @error('logo_suchana_file')
+          <p class="muted" style="color:#c8202f;font-size:12px;margin-top:4px">{{ $message }}</p>
+        @enderror
       </div>
       <div class="field">
         <label>SFDB লোগো</label>
         @if (! empty($settings['logo_sfdb']))
-          <img src="{{ str_starts_with($settings['logo_sfdb'], 'http') ? $settings['logo_sfdb'] : asset('storage/'.$settings['logo_sfdb']) }}" alt="" style="height:54px;margin-bottom:6px;border-radius:8px;border:1px solid var(--line)">
+          <img src="{{ \App\Support\Settings::logoUrl($settings['logo_sfdb'], 'images/logo-sfdb.jpg') }}" alt="" class="logo-preview-img">
         @endif
-        <input type="file" name="logo_sfdb_file" accept="image/*" data-upload-preview="#logo2Preview">
+        <input type="file" name="logo_sfdb_file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" data-upload-preview="#logo2Preview">
         <div class="upload-preview" id="logo2Preview" hidden></div>
+        @error('logo_sfdb_file')
+          <p class="muted" style="color:#c8202f;font-size:12px;margin-top:4px">{{ $message }}</p>
+        @enderror
       </div>
     </div>
   </div>

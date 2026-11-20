@@ -7,8 +7,7 @@
   @if ($image->exists) @method('PUT') @endif
 
   @if ($image->exists)
-    @php $src = str_starts_with($image->image, 'http') ? $image->image : asset('storage/'.$image->image); @endphp
-    <div style="margin-bottom:12px"><img src="{{ $src }}" alt="" style="max-height:160px;border-radius:12px;border:1px solid var(--line)"></div>
+    <div style="margin-bottom:12px"><img src="{{ $image->imageUrl() }}" alt="" style="max-height:160px;border-radius:12px;border:1px solid var(--line)"></div>
   @endif
 
   <div class="form-grid two">
@@ -16,8 +15,12 @@
     <div class="field"><label>Title (English)</label><input name="title_en" value="{{ old('title_en', $image->title_en) }}"></div>
     <div class="field">
       <label>ছবি {{ $image->exists ? '(নতুন দিলে পরিবর্তন হবে)' : '*' }}</label>
-      <input type="file" name="image" accept="image/*" id="galleryImageInput" data-upload-preview="#galleryPreview" @if(!$image->exists) required @endif>
+      <p class="muted" style="font-size:12px;margin:0 0 6px">JPG / PNG / WebP / GIF (max ৪MB)</p>
+      <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" id="galleryImageInput" data-upload-preview="#galleryPreview" @if(!$image->exists) required @endif>
       <div class="upload-preview" id="galleryPreview" hidden></div>
+      @error('image')
+        <p class="muted" style="color:#c8202f;font-size:12px;margin-top:4px">{{ $message }}</p>
+      @enderror
     </div>
     <div class="field"><label>ক্রম (sort order)</label><input type="number" name="sort_order" value="{{ old('sort_order', $image->sort_order ?? 0) }}"></div>
   </div>

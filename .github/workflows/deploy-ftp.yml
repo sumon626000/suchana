@@ -37,9 +37,9 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./
-          # suchana.bd lives under domains/.../public_html — NOT account-level /public_html/
-          # Use an FTP account whose home is /home/u987493658/domains/suchana.bd/public_html
-          # then set server-dir to ./  (or /). Wrong path = Actions "success" but live site unchanged.
+          # Live site FTP user MUST be u987493658.suchana.bd (not .sucana).
+          # That account home is /home/u987493658/domains/suchana.bd/public_html
+          # Wrong FTP user = Actions "success" but suchana.bd unchanged.
           server-dir: ./
           dangerous-clean-slate: false
           timeout: 60000

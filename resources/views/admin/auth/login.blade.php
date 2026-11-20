@@ -1,8 +1,6 @@
 @php
-  $logo1 = $site['logo_suchana'] ?? '';
-  $logo1Src = $logo1 ? (str_starts_with($logo1, 'http') ? $logo1 : asset('storage/'.$logo1)) : asset('images/logo-suchana.jpg');
-  $logo2 = $site['logo_sfdb'] ?? '';
-  $logo2Src = $logo2 ? (str_starts_with($logo2, 'http') ? $logo2 : asset('storage/'.$logo2)) : asset('images/logo-sfdb.jpg');
+  $logo1Src = \App\Support\Settings::logoUrl($site['logo_suchana'] ?? '', 'images/logo-suchana.jpg');
+  $logo2Src = \App\Support\Settings::logoUrl($site['logo_sfdb'] ?? '', 'images/logo-sfdb.jpg');
 @endphp
 <!DOCTYPE html>
 <html lang="bn" data-theme="light" data-accent="{{ $site['theme_color'] ?? 'sky' }}">
@@ -58,9 +56,12 @@
         <label>পাসওয়ার্ড</label>
         <input name="password" type="password" required autocomplete="current-password">
       </div>
-      <div class="field" style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" name="remember" value="1" style="width:auto">
-        <label style="margin:0">মনে রাখুন</label>
+      <div class="field" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <label style="margin:0;display:flex;align-items:center;gap:8px">
+          <input type="checkbox" name="remember" value="1" style="width:auto">
+          <span>মনে রাখুন</span>
+        </label>
+        <a href="{{ route('password.request') }}" style="color:var(--green);font-weight:600;font-size:13px">পাসওয়ার্ড ভুলে গেছেন?</a>
       </div>
       <button class="btn btn-primary" type="submit">লগইন করুন</button>
     </form>

@@ -19,14 +19,18 @@
 <body class="site">
 
 @php
-  $logo1 = $site['logo_suchana'] ?? '';
-  $logo1Src = $logo1 ? (str_starts_with($logo1, 'http') ? $logo1 : asset('storage/'.$logo1)) : asset('images/logo-suchana.jpg');
-  $logo2 = $site['logo_sfdb'] ?? '';
-  $logo2Src = $logo2 ? (str_starts_with($logo2, 'http') ? $logo2 : asset('storage/'.$logo2)) : asset('images/logo-sfdb.jpg');
+  $logo1Src = \App\Support\Settings::logoUrl($site['logo_suchana'] ?? '', 'images/logo-suchana.jpg');
+  $logo2Src = \App\Support\Settings::logoUrl($site['logo_sfdb'] ?? '', 'images/logo-sfdb.jpg');
   $authUser = auth()->user();
-  $dashUrl = $authUser
-      ? ($authUser->isAdmin() ? route('admin.dashboard') : ($authUser->isTrainer() ? route('trainer.dashboard') : route('student.dashboard')))
-      : null;
+  $isAdminUser = $authUser?->isAdmin() ?? false;
+  $isTrainerUser = $authUser?->isTrainer() ?? false;
+  $isStudentUser = $authUser?->isStudent() ?? false;
+  // Public site keeps student/trainer dashboards separate. Admin only uses /admin.
+  $dashUrl = $isStudentUser
+      ? route('student.dashboard')
+      : ($isTrainerUser ? route('trainer.dashboard') : null);
+  $adminPanelUrl = $isAdminUser ? route('admin.dashboard') : null;
+  $logoutAction = $isAdminUser ? route('admin.logout') : route('logout');
 @endphp
 
 <div class="site-progress" id="siteProgress"></div>
@@ -35,8 +39,8 @@
   <div class="container header-inner">
     <a href="{{ route('home') }}" class="brand" aria-label="Suchana">
       <span class="brand-logos">
-        <img src="{{ $logo1Src }}" alt="Suchana Development Bangladesh" width="44" height="44">
-        <img src="{{ $logo2Src }}" alt="SFDB" width="66" height="44">
+        <img src="{{ $logo1Src }}" alt="Suchana Development Bangladesh">
+        <img src="{{ $logo2Src }}" alt="SFDB">
       </span>
       <span class="brand-text">
         <span class="brand-name" data-bn="{{ $site['brand_title_bn'] }}" data-en="{{ $site['brand_title_en'] }}">{{ $site['brand_title_bn'] }}</span>
@@ -58,13 +62,17 @@
       </button>
       <button class="icon-btn" id="langToggle" aria-label="Switch language" style="width:auto;padding:0 12px;font-size:12px;font-weight:700">EN</button>
       @auth
-        <a href="{{ $dashUrl }}" class="user-chip hide-mobile" title="{{ auth()->user()->name }}">
-          <span class="user-chip-avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</span>
-        </a>
+        @if ($adminPanelUrl)
+          <a href="{{ $adminPanelUrl }}" class="user-chip hide-mobile" title="Admin Panel">
+            <span class="user-chip-avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</span>
+          </a>
+        @elseif ($dashUrl)
+          <a href="{{ $dashUrl }}" class="user-chip hide-mobile" title="{{ auth()->user()->name }}">
+            <span class="user-chip-avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</span>
+          </a>
+        @endif
       @endauth
-      @if (! $authUser || $authUser->isStudent())
-        <a href="{{ url('/apply') }}" class="btn btn-primary hide-mobile" data-bn="আবেদন করুন" data-en="Apply">আবেদন করুন</a>
-      @endif
+      <a href="{{ url('/apply') }}" class="btn btn-primary hide-mobile" data-bn="আবেদন করুন" data-en="Apply">আবেদন করুন</a>
       <div class="more-wrap">
         <button class="icon-btn" id="moreToggle" aria-label="More menu" aria-expanded="false" aria-controls="moreMenu" aria-haspopup="true">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
@@ -81,11 +89,15 @@
           <a href="{{ route('faq') }}" data-bn="সাধারণ প্রশ্নোত্তর" data-en="FAQ">সাধারণ প্রশ্নোত্তর</a>
           <div class="more-menu-sep"></div>
           @auth
-            <a href="{{ $dashUrl }}" data-bn="আমার ড্যাশবোর্ড" data-en="My Dashboard">আমার ড্যাশবোর্ড</a>
-            @if (auth()->user()->isStudent())
+            @if ($adminPanelUrl)
+              <a href="{{ $adminPanelUrl }}" data-bn="অ্যাডমিন প্যানেল" data-en="Admin Panel">অ্যাডমিন প্যানেল</a>
+            @elseif ($dashUrl)
+              <a href="{{ $dashUrl }}" data-bn="আমার ড্যাশবোর্ড" data-en="My Dashboard">আমার ড্যাশবোর্ড</a>
+            @endif
+            @if ($isStudentUser)
               <a href="{{ route('student.profile') }}" data-bn="প্রোফাইল" data-en="Profile">প্রোফাইল</a>
             @endif
-            <form method="POST" action="{{ route('logout') }}" class="more-logout">
+            <form method="POST" action="{{ $logoutAction }}" class="more-logout">
               @csrf
               <button type="submit" data-bn="লগআউট" data-en="Logout">লগআউট</button>
             </form>
@@ -111,9 +123,13 @@
         </div>
         <div class="mnav-user-info">
           <div class="mnav-name">{{ $mnavUser->name }}</div>
-          <div class="mnav-role">{{ '@'.$mnavUser->username }} · {{ $mnavUser->isAdmin() ? 'অ্যাডমিন' : ($mnavUser->isTrainer() ? 'ট্রেইনার' : 'শিক্ষার্থী') }}</div>
+          <div class="mnav-role">{{ '@'.$mnavUser->username }} · {{ $isAdminUser ? 'অ্যাডমিন' : ($isTrainerUser ? 'ট্রেইনার' : 'শিক্ষার্থী') }}</div>
         </div>
-        <a href="{{ $dashUrl }}" class="mnav-user-link" data-bn="ড্যাশবোর্ড →" data-en="Dashboard →">ড্যাশবোর্ড →</a>
+        @if ($adminPanelUrl)
+          <a href="{{ $adminPanelUrl }}" class="mnav-user-link" data-bn="অ্যাডমিন →" data-en="Admin →">অ্যাডমিন →</a>
+        @elseif ($dashUrl)
+          <a href="{{ $dashUrl }}" class="mnav-user-link" data-bn="ড্যাশবোর্ড →" data-en="Dashboard →">ড্যাশবোর্ড →</a>
+        @endif
       </div>
     @endauth
 
@@ -142,19 +158,26 @@
     </div>
 
     <div class="mnav-group">
-      <div class="mnav-label" data-bn="আমার অ্যাকাউন্ট" data-en="My Account">আমার অ্যাকাউন্ট</div>
+      <div class="mnav-label" data-bn="{{ $isAdminUser ? 'অ্যাডমিন' : 'আমার অ্যাকাউন্ট' }}" data-en="{{ $isAdminUser ? 'Admin' : 'My Account' }}">{{ $isAdminUser ? 'অ্যাডমিন' : 'আমার অ্যাকাউন্ট' }}</div>
       @auth
-        <a class="mnav-link" href="{{ $dashUrl }}">
-          <span class="mnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg></span>
-          <span data-bn="আমার ড্যাশবোর্ড" data-en="My Dashboard">আমার ড্যাশবোর্ড</span><span class="mnav-arrow">›</span>
-        </a>
-        @if (auth()->user()->isStudent())
+        @if ($adminPanelUrl)
+          <a class="mnav-link" href="{{ $adminPanelUrl }}">
+            <span class="mnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg></span>
+            <span data-bn="অ্যাডমিন প্যানেল" data-en="Admin Panel">অ্যাডমিন প্যানেল</span><span class="mnav-arrow">›</span>
+          </a>
+        @elseif ($dashUrl)
+          <a class="mnav-link" href="{{ $dashUrl }}">
+            <span class="mnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg></span>
+            <span data-bn="আমার ড্যাশবোর্ড" data-en="My Dashboard">আমার ড্যাশবোর্ড</span><span class="mnav-arrow">›</span>
+          </a>
+        @endif
+        @if ($isStudentUser)
           <a class="mnav-link" href="{{ route('student.profile') }}">
             <span class="mnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.6"/><path stroke-linecap="round" d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg></span>
             <span data-bn="প্রোফাইল" data-en="Profile">প্রোফাইল</span><span class="mnav-arrow">›</span>
           </a>
         @endif
-        <form method="POST" action="{{ route('logout') }}" class="mnav-form">
+        <form method="POST" action="{{ $logoutAction }}" class="mnav-form">
           @csrf
           <button class="mnav-link mnav-logout" type="submit">
             <span class="mnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l5-5-5-5"/><path stroke-linecap="round" d="M21 12H9"/></svg></span>
@@ -204,9 +227,13 @@
         <div class="footer-heading" data-bn="শিক্ষার্থী" data-en="Students">শিক্ষার্থী</div>
         <ul class="footer-list">
           @auth
-            <li><a href="{{ $dashUrl }}" data-bn="আমার ড্যাশবোর্ড" data-en="My Dashboard">আমার ড্যাশবোর্ড</a></li>
+            @if ($adminPanelUrl)
+              <li><a href="{{ $adminPanelUrl }}" data-bn="অ্যাডমিন প্যানেল" data-en="Admin Panel">অ্যাডমিন প্যানেল</a></li>
+            @elseif ($dashUrl)
+              <li><a href="{{ $dashUrl }}" data-bn="আমার ড্যাশবোর্ড" data-en="My Dashboard">আমার ড্যাশবোর্ড</a></li>
+            @endif
             <li>
-              <form method="POST" action="{{ route('logout') }}" style="margin:0">
+              <form method="POST" action="{{ $logoutAction }}" style="margin:0">
                 @csrf
                 <button type="submit" data-bn="লগআউট" data-en="Logout">লগআউট</button>
               </form>
@@ -238,7 +265,9 @@
         <a href="{{ route('faq') }}" data-bn="সাধারণ প্রশ্নোত্তর" data-en="FAQ">সাধারণ প্রশ্নোত্তর</a>
       </div>
       <div style="margin-top:6px;font-size:12px">
-        <a href="{{ route('admin.login') }}" style="color:#9fb0c3" data-bn="অ্যাডমিন প্যানেল" data-en="Admin Panel">অ্যাডমিন প্যানেল</a>
+        @guest
+          <a href="{{ route('admin.login') }}" style="color:#9fb0c3" data-bn="অ্যাডমিন লগইন" data-en="Admin Login">অ্যাডমিন লগইন</a>
+        @endguest
       </div>
     </div>
   </div>

@@ -26,6 +26,12 @@
     <button class="btn btn-outline btn-sm" type="submit">পাসওয়ার্ড রিসেট</button>
   </form>
 
+  <form method="POST" action="{{ route('admin.students.destroy', $student) }}" class="mt-3" onsubmit="return confirm('{{ $student->name }} মুছে ফেলবেন? আবেদন/সার্টিফিকেটও মুছে যাবে।')">
+    @csrf
+    @method('DELETE')
+    <button class="btn btn-danger btn-sm" type="submit">শিক্ষার্থী ডিলিট করুন</button>
+  </form>
+
   <hr class="hr">
   <h3 style="font-size:16px;font-weight:700;margin-bottom:10px">আবেদনসমূহ</h3>
   @forelse ($student->applications as $app)
